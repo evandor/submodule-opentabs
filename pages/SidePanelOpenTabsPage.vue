@@ -43,7 +43,7 @@ import {SidePanelView, useUiStore} from "stores/uiStore";
 import {onMounted} from "vue";
 import Analytics from "src/core/utils/google-analytics";
 import SidePanelToolbarTabNavigationHelper from "src/opentabs/pages/SidePanelToolbarTabNavigationHelper.vue";
-import SidePanelToolbarButton from "components/buttons/SidePanelToolbarButton.vue";
+import SidePanelToolbarButton from "src/core/components/SidePanelToolbarButton.vue";
 import SidePanelOpenTabsListViewer from "src/opentabs/pages/SidePanelOpenTabsListViewer.vue";
 
 onMounted(() => {
