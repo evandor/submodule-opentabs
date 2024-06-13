@@ -77,7 +77,7 @@ import _ from "lodash";
 import {onMounted, ref, watch, watchEffect} from "vue"
 import TabsetService from "src/tabsets/services/TabsetService";
 import {useTabsetService} from "src/tabsets/services/TabsetService2";
-import {useUiStore} from "src/stores/uiStore";
+import {useUiStore} from "src/ui/stores/uiStore";
 import Analytics from "src/core/utils/google-analytics";
 import {useWindowsStore} from "src/windows/stores/windowsStore";
 import {Window} from "src/windows/models/Window";
