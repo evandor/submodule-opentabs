@@ -45,6 +45,7 @@ import Analytics from "src/core/utils/google-analytics";
 import SidePanelToolbarTabNavigationHelper from "src/opentabs/pages/SidePanelToolbarTabNavigationHelper.vue";
 import SidePanelToolbarButton from "src/core/components/SidePanelToolbarButton.vue";
 import SidePanelOpenTabsListViewer from "src/opentabs/pages/SidePanelOpenTabsListViewer.vue";
+import {SidePanelViews} from "src/models/SidePanelViews";
 
 onMounted(() => {
   Analytics.firePageViewEvent('SidePanelOpenTabsPage', document.location.href);
