@@ -81,10 +81,10 @@ import {useUiStore} from "src/ui/stores/uiStore";
 import Analytics from "src/core/utils/google-analytics";
 import {useWindowsStore} from "src/windows/stores/windowsStore";
 import {Window} from "src/windows/models/Window";
-import OpenTabCard2 from "components/layouts/OpenTabCard2.vue";
 import SidePanelTabsetsSelectorWidget from "components/widgets/SidePanelTabsetsSelectorWidget.vue";
 import {useTabsStore2} from "src/tabsets/stores/tabsStore2";
 import {useTabsetsStore} from "src/tabsets/stores/tabsetsStore";
+import OpenTabCard2 from "src/opentabs/components/OpenTabCard2.vue";
 
 const useSelection = ref(false)
 const invert = ref(false)
