@@ -52,21 +52,21 @@
       <q-item disable v-if="showSpecialTabsets()">
         Use special tabsets:
       </q-item>
-      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && existingSession"
-              clickable v-close-popup
-              @click="replaceSession">
-        <q-item-section>&bull; Replace existing Session...</q-item-section>
-      </q-item>
-      <q-item v-else-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !existingSession"
-              clickable v-close-popup
-              @click="startSession">
-        <q-item-section>&bull; Start a new Session...</q-item-section>
-      </q-item>
-      <q-separator v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !props.inSidePanel"/>
-      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !props.inSidePanel"
-              clickable v-close-popup @click="router.push('/settings')">
-        <q-item-section>Change Settings</q-item-section>
-      </q-item>
+<!--      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && existingSession"-->
+<!--              clickable v-close-popup-->
+<!--              @click="replaceSession">-->
+<!--        <q-item-section>&bull; Replace existing Session...</q-item-section>-->
+<!--      </q-item>-->
+<!--      <q-item v-else-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !existingSession"-->
+<!--              clickable v-close-popup-->
+<!--              @click="startSession">-->
+<!--        <q-item-section>&bull; Start a new Session...</q-item-section>-->
+<!--      </q-item>-->
+<!--      <q-separator v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !props.inSidePanel"/>-->
+<!--      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !props.inSidePanel"-->
+<!--              clickable v-close-popup @click="router.push('/settings')">-->
+<!--        <q-item-section>Change Settings</q-item-section>-->
+<!--      </q-item>-->
     </q-list>
   </q-menu>
 
@@ -88,7 +88,6 @@ import {FeatureIdent} from "src/app/models/FeatureIdent";
 import {DrawerTabs, useUiStore} from "src/ui/stores/uiStore";
 import {useSettingsStore} from "src/stores/settingsStore";
 import BackupAndCloseDialog from "src/opentabs/dialogues/BackupAndCloseDialog.vue";
-import NewSessionDialog from "src/tabsets/dialogues/NewSessionDialog.vue";
 
 const settingsStore = useSettingsStore()
 const router = useRouter()
@@ -151,8 +150,8 @@ watchEffect(() => {
   existingSession.value = _.filter([...useTabsetsStore().tabsets.values()], (ts: Tabset) => ts.type === TabsetType.SESSION).length > 0
 })
 
-const startSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: false}})
-const replaceSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: true}})
+// const startSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: false}})
+// const replaceSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: true}})
 const backupAndClose = () => $q.dialog({component: BackupAndCloseDialog})
 
 const showSpecialTabsets = () => useFeaturesStore().hasFeature(FeatureIdent.SESSIONS)
