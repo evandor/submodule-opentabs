@@ -18,7 +18,7 @@
   </template>
 </template>
 <script setup lang="ts">
-import {FeatureIdent} from "src/models/FeatureIdent";
+import {FeatureIdent} from "src/app/models/FeatureIdent";
 import NavigationService from "src/services/NavigationService";
 import SidePanelToolbarButton from "src/core/components/SidePanelToolbarButton.vue";
 import {useFeaturesStore} from "src/features/stores/featuresStore";

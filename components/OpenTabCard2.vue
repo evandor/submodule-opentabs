@@ -59,7 +59,7 @@ import {PropType, ref, watch, watchEffect} from "vue";
 import {uid} from "quasar";
 import TabService from "src/services/TabService";
 import {useFeaturesStore} from "src/features/stores/featuresStore";
-import {FeatureIdent} from "src/models/FeatureIdent";
+import {FeatureIdent} from "src/app/models/FeatureIdent";
 import {useTabsetsStore} from "../../tabsets/stores/tabsetsStore";
 
 const props = defineProps({

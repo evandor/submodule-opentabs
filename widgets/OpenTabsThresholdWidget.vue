@@ -84,7 +84,7 @@ import TabsetService from "src/tabsets/services/TabsetService"
 import {useTabsStore2} from "src/tabsets/stores/tabsStore2";
 import {useFeaturesStore} from "src/features/stores/featuresStore";
 import {useUtils} from "src/core/services/Utils";
-import {FeatureIdent} from "src/models/FeatureIdent";
+import {FeatureIdent} from "src/app/models/FeatureIdent";
 import {DrawerTabs, useUiStore} from "src/ui/stores/uiStore";
 import {useSettingsStore} from "src/stores/settingsStore";
 import BackupAndCloseDialog from "src/opentabs/dialogues/BackupAndCloseDialog.vue";
