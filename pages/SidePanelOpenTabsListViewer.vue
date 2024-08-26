@@ -7,8 +7,10 @@
         <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true"/>
       </div>
       <div class="col-6 text-right">
-        Current Window only
-        <q-checkbox v-model="currentWindowOnly"/>
+        <template v-if="useWindowsStore().allWindows.size > 1">
+          Current Window only
+          <q-checkbox v-model="currentWindowOnly"/>
+        </template>
       </div>
       <div class="col-12 q-mb-xs">
         <q-input
@@ -74,7 +76,7 @@
 
 <script setup lang="ts">
 import _ from "lodash";
-import {onMounted, ref, watch, watchEffect} from "vue"
+import {onMounted, ref, watchEffect} from "vue"
 import TabsetService from "src/tabsets/services/TabsetService";
 import {useTabsetService} from "src/tabsets/services/TabsetService2";
 import {useUiStore} from "src/ui/stores/uiStore";
