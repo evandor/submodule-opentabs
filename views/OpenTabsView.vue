@@ -86,7 +86,7 @@
 
 <script setup lang="ts">
 import _ from "lodash";
-import {onMounted, ref, watchEffect, watch} from "vue"
+import {onMounted, ref, watchEffect} from "vue"
 import {VueDraggableNext} from 'vue-draggable-next'
 import InfoMessageWidget from "src/ui/widgets/InfoMessageWidget.vue";
 import {useUiStore} from "src/ui/stores/uiStore";
@@ -138,7 +138,7 @@ const tabSelectionChanged = (a: any) => {
 }
 
 const tabAddedToTabset = (a: any) => {
-  const {tabId, tabUrl} = a
+  const {tabId} = a
   tabSelection.value.delete(tabId)
 }
 

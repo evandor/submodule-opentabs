@@ -25,8 +25,7 @@
 
 <script lang="ts" setup>
 
-import {ref} from "vue";
-import {uid, useDialogPluginComponent, useQuasar} from "quasar";
+import {uid, useDialogPluginComponent} from "quasar";
 import {useTabsetService} from "src/tabsets/services/TabsetService2";
 import {Tab} from "src/tabsets/models/Tab";
 import TabsetService from "src/tabsets/services/TabsetService";
@@ -37,11 +36,6 @@ defineEmits([
 ])
 
 const {dialogRef, onDialogHide, onDialogCancel} = useDialogPluginComponent()
-
-const newTabsetName = ref( 'Session ' + new Date().getDate() + '.' + (new Date().getMonth() + 1) )
-const newTabsetNameExists = ref(false)
-const hideWarning = ref(false)
-
 
 const backupAndCloseTabs = () => {
   TabsetService.closeTrackedTabs()
@@ -55,11 +49,6 @@ const backupAndCloseTabs = () => {
       }
     })
     .then(() => TabsetService.closeAllTabs())
-}
-
-const newTabsetDialogWarning = () => {
-  return (!hideWarning.value && useTabsetsStore().existingInTabset(newTabsetName.value)) ?
-    "Hint: Tabset exists, but you can change it into a session" : ""
 }
 
 

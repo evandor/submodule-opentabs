@@ -77,7 +77,6 @@
 <script setup lang="ts">
 import _ from "lodash";
 import {onMounted, ref, watchEffect} from "vue"
-import TabsetService from "src/tabsets/services/TabsetService";
 import {useTabsetService} from "src/tabsets/services/TabsetService2";
 import {useUiStore} from "src/ui/stores/uiStore";
 import Analytics from "src/core/utils/google-analytics";
@@ -85,11 +84,9 @@ import {useWindowsStore} from "src/windows/stores/windowsStore";
 import {Window} from "src/windows/models/Window";
 import SidePanelTabsetsSelectorWidget from "components/widgets/SidePanelTabsetsSelectorWidget.vue";
 import {useTabsStore2} from "src/tabsets/stores/tabsStore2";
-import {useTabsetsStore} from "src/tabsets/stores/tabsetsStore";
 import OpenTabCard2 from "src/opentabs/components/OpenTabCard2.vue";
 
 const useSelection = ref(false)
-const invert = ref(false)
 const userCanSelect = ref(false)
 const currentWindowOnly = ref(true)
 const tabsForCurrentWindow = ref<chrome.tabs.Tab[]>([])
@@ -137,12 +134,6 @@ watchEffect(() => {
   userCanSelect.value = false
 })
 
-const addTooltip = () => useSelection.value ?
-  `Add ${tabSelection.value.size} tab(s) to ${useTabsetsStore().currentTabsetName}` :
-  `Add all tabs to ${useTabsetsStore().currentTabsetName}`
-
-const addLabel = () => 'add'
-const checkboxLabel = () => useSelection.value ? '' : 'use selection'
 const tabSelectionChanged = (a: any) => {
   const {tabId, selected} = a
   if (selected) {
@@ -153,15 +144,11 @@ const tabSelectionChanged = (a: any) => {
 }
 
 const tabAddedToTabset = (a: any) => {
-  const {tabId, tabUrl} = a
+  const {tabId} = a
   tabSelection.value.delete(tabId)
 }
 
 const hasSelectable = () => userCanSelect.value = true
-
-const saveSelectedTabs = () => {
-  TabsetService.saveSelectedPendingTabs()
-}
 
 const resetFilter = () => {
   filter.value = ''
@@ -190,13 +177,7 @@ const calcWindowRows = async () => {
   return result// _.sortBy(result, "index")
 }
 
-const windowShouldBeOpen = (w: object) => {
-  return w['id' as keyof object] === useWindowsStore().currentChromeWindow?.id
-}
-
-
 const cardStyle = (tab: chrome.tabs.Tab) => {
-  const height = "30px";
   let background = ''
   if (hasDuplicate(tab)) {
     background = "background: radial-gradient(circle, #FFFFFF 0%, #FFECB3 100%)"

@@ -55,7 +55,7 @@ import TabFaviconWidget from "src/tabsets/widgets/TabFaviconWidget.vue"
 import {useTabsetService} from "src/tabsets/services/TabsetService2";
 import {useCommandExecutor} from "src/core/services/CommandExecutor";
 import {CreateTabFromOpenTabsCommand} from "src/tabsets/commands/CreateTabFromOpenTabs";
-import {PropType, ref, watch, watchEffect} from "vue";
+import {PropType, ref} from "vue";
 import {uid} from "quasar";
 import TabService from "src/services/TabService";
 import {useFeaturesStore} from "src/features/stores/featuresStore";
@@ -75,10 +75,7 @@ const alreadyInCurrentTabset = ref(false)
 
 const closeTab = (tab: chrome.tabs.Tab) => {
   NavigationService.closeChromeTab(tab)
-  // tabsStore.pendingTabset.tabs = _.filter(tabsStore.pendingTabset.tabs, t => t.url !== tab.url)
 }
-
-const self = chrome.runtime?.getURL("")
 
 const addToCurrentTabset = () => {
   useCommandExecutor().executeFromUi(new CreateTabFromOpenTabsCommand(props.chromeTab as unknown as Tab, 0))

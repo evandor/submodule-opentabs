@@ -75,7 +75,6 @@
 <script lang="ts" setup>
 
 import {ref, watch, watchEffect} from "vue";
-import {useRouter} from "vue-router";
 import {useQuasar} from "quasar";
 import _ from "lodash"
 import {Tabset, TabsetType} from "src/tabsets/models/Tabset";
@@ -90,7 +89,6 @@ import {useSettingsStore} from "src/stores/settingsStore";
 import BackupAndCloseDialog from "src/opentabs/dialogues/BackupAndCloseDialog.vue";
 
 const settingsStore = useSettingsStore()
-const router = useRouter()
 const $q = useQuasar()
 
 const openTabsCountRatio = ref(0)
