@@ -29,17 +29,27 @@
         {{ chromeTab.url }}
       </q-tooltip>
     </div>
+    <div class="col-1 q-ma-none q-pa-none">
+      <q-icon v-if="existsInTabset" name="link" :color="existsInCurrentTabset ? 'green' :'warning'">
+        <q-tooltip class="tooltip-small" v-if="existsInCurrentTabset">Already contained in the current tabset</q-tooltip>
+        <q-tooltip class="tooltip-small" v-else>Already contained in a tabset</q-tooltip>
+      </q-icon>
+    </div>
     <div class="col q-mt-xs text-right">
       <template v-if="!props.useSelection && showIcons">
         <q-icon name="o_add_circle"
                 :color="alreadyInCurrentTabset ? 'grey' : 'warning'"
                 class="q-mr-sm"
-                :class="alreadyInCurrentTabset ? '' : 'cursor-pointer'" size="xs"
+                :class="alreadyInCurrentTabset ? '' : 'cursor-pointer'" size="11px"
                 @click="addToCurrentTabset">
-          <q-tooltip class="tooltip" v-if="alreadyInCurrentTabset">This tab has already been added to {{useTabsetsStore().currentTabsetName}}</q-tooltip>
-          <q-tooltip class="tooltip" v-else>Click here to add the tab to your current tabset {{useTabsetsStore().currentTabsetName}}</q-tooltip>
+          <q-tooltip class="tooltip" v-if="alreadyInCurrentTabset">This tab has already been added to
+            {{ useTabsetsStore().currentTabsetName }}
+          </q-tooltip>
+          <q-tooltip class="tooltip" v-else>Click here to add the tab to your current tabset
+            {{ useTabsetsStore().currentTabsetName }}
+          </q-tooltip>
         </q-icon>
-        <q-icon name="close" class="cursor-pointer" @click="closeTab(chromeTab)" size="xs">
+        <q-icon name="close" class="cursor-pointer" @click="closeTab(chromeTab)" size="11px">
           <q-tooltip class="tooltip">Close this tab in the browser</q-tooltip>
         </q-icon>
       </template>
@@ -55,7 +65,7 @@ import TabFaviconWidget from "src/tabsets/widgets/TabFaviconWidget.vue"
 import {useTabsetService} from "src/tabsets/services/TabsetService2";
 import {useCommandExecutor} from "src/core/services/CommandExecutor";
 import {CreateTabFromOpenTabsCommand} from "src/tabsets/commands/CreateTabFromOpenTabs";
-import {PropType, ref} from "vue";
+import {onMounted, PropType, ref} from "vue";
 import {uid} from "quasar";
 import TabService from "src/services/TabService";
 import {useFeaturesStore} from "src/features/stores/featuresStore";
@@ -72,6 +82,15 @@ const emits = defineEmits(['selectionChanged', 'addedToTabset', 'hasSelectable']
 
 const showIcons = ref(false)
 const alreadyInCurrentTabset = ref(false)
+const existsInTabset = ref(false)
+const existsInCurrentTabset = ref(false)
+
+onMounted(() => {
+  if (props.chromeTab?.url) {
+    existsInTabset.value = useTabsetService().urlExistsInATabset(props.chromeTab.url)
+    existsInCurrentTabset.value = useTabsetService().urlExistsInCurrentTabset(props.chromeTab.url)
+  }
+})
 
 const closeTab = (tab: chrome.tabs.Tab) => {
   NavigationService.closeChromeTab(tab)
