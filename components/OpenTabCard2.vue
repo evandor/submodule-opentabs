@@ -18,7 +18,7 @@
         :tab="toTab(chromeTab)" width="20px" height="20px"/>
     </div>
 
-    <div class="col-8 q-mt-sm q-ml-xs text-body2 ellipsis cursor-pointer"
+    <div class="col-7 q-mt-sm q-ml-xs text-body2 ellipsis cursor-pointer"
          :class="TabService.isCurrentTab(toTab(chromeTab)) ? 'text-bold' : ''"
          @click="NavigationService.openChromeTab(chromeTab)">
       {{ chromeTab?.title }}
@@ -29,7 +29,7 @@
         {{ chromeTab.url }}
       </q-tooltip>
     </div>
-    <div class="col-1 q-ma-none q-pa-none">
+    <div class="col-1 q-mt-xs text-right">
       <q-icon v-if="existsInTabset" name="link" :color="existsInCurrentTabset ? 'green' :'warning'">
         <q-tooltip class="tooltip-small" v-if="existsInCurrentTabset">Already contained in the current tabset</q-tooltip>
         <q-tooltip class="tooltip-small" v-else>Already contained in a tabset</q-tooltip>
@@ -39,8 +39,8 @@
       <template v-if="!props.useSelection && showIcons">
         <q-icon name="o_add_circle"
                 :color="alreadyInCurrentTabset ? 'grey' : 'warning'"
-                class="q-mr-sm"
-                :class="alreadyInCurrentTabset ? '' : 'cursor-pointer'" size="11px"
+                class="q-mr-xs"
+                :class="alreadyInCurrentTabset ? '' : 'cursor-pointer'" size="xs"
                 @click="addToCurrentTabset">
           <q-tooltip class="tooltip" v-if="alreadyInCurrentTabset">This tab has already been added to
             {{ useTabsetsStore().currentTabsetName }}
@@ -49,7 +49,7 @@
             {{ useTabsetsStore().currentTabsetName }}
           </q-tooltip>
         </q-icon>
-        <q-icon name="close" class="cursor-pointer" @click="closeTab(chromeTab)" size="11px">
+        <q-icon name="close" class="cursor-pointer" @click="closeTab(chromeTab)" size="xs">
           <q-tooltip class="tooltip">Close this tab in the browser</q-tooltip>
         </q-icon>
       </template>
