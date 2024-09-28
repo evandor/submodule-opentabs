@@ -7,14 +7,13 @@
       :color="useTabsStore2().chromeTabsHistoryPosition === 0 ? 'grey' : 'primary'"
       @click="NavigationService.backOneTab()"/>
 
-    <SidePanelToolbarButton
+    <SidePanelToolbarButton class="q-mr-sm"
       icon="chevron_right"
       tooltip="Return to tab before"
       :disable="useTabsStore2().chromeTabsHistoryPosition === useTabsStore2().chromeTabsHistory.length-1"
       :color="useTabsStore2().chromeTabsHistoryPosition === useTabsStore2().chromeTabsHistory.length-1 ? 'grey' : 'primary'"
       @click="NavigationService.forwardOneTab()"/>
 
-    <span class="q-ma-none q-pa-none q-mx-sm text-grey-5">|</span>
   </template>
 </template>
 <script setup lang="ts">
