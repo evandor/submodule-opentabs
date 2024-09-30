@@ -4,13 +4,13 @@
           <div class="row q-ma-none q-pa-none">
             <div class="col-12 q-ma-none q-pa-none q-pt-lg">
 
-              <InfoMessageWidget
-                  v-if="useTabsetsStore().currentTabsetId && tabs.length > 0 && !userCanSelect"
-                  :probability="1"
-                  css-class="q-pa-sm q-gutter-sm"
-                  force-display
-                  ident="unassignedAndOpenTabs_userCannotSelect"
-                  hint="Tabs with grey background are already contained in the current tabset."/>
+<!--              <InfoMessageWidget-->
+<!--                  v-if="useTabsetsStore().currentTabsetId && tabs.length > 0 && !userCanSelect"-->
+<!--                  :probability="1"-->
+<!--                  css-class="q-pa-sm q-gutter-sm"-->
+<!--                  force-display-->
+<!--                  ident="unassignedAndOpenTabs_userCannotSelect"-->
+<!--                  hint="Tabs with grey background are already contained in the current tabset."/>-->
 
               <div v-if="useTabsetsStore().currentTabsetId && tabs.length > 1 && userCanSelect"
                    class="q-ma-none" style="border: 1px dotted grey; border-radius: 3px">

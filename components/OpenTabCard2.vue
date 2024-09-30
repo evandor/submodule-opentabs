@@ -97,7 +97,7 @@ const closeTab = (tab: chrome.tabs.Tab) => {
 }
 
 const addToCurrentTabset = () => {
-  useCommandExecutor().executeFromUi(new CreateTabFromOpenTabsCommand(props.chromeTab as unknown as chrome.tabs.Tab, 0))
+  useCommandExecutor().executeFromUi(new CreateTabFromOpenTabsCommand(props.chromeTab as chrome.tabs.Tab, 0))
     .then(() => alreadyInCurrentTabset.value = true)
     .then(() => emits('addedToTabset', {tabId: props.chromeTab.id, tabUrl: props.chromeTab.url}))
 }
