@@ -1,5 +1,5 @@
 <template>
-
+  <!-- SidePanelOpenTabsPage -->
   <q-page padding style="padding-top: 34px">
 
     <div class="q-ma-none">

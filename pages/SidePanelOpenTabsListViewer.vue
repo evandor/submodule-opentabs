@@ -1,34 +1,32 @@
 <template>
+  <!-- SidePanelOpenTabsListViewer -->
 
-  <q-list class="q-mt-none">
-
-    <div class="row q-mt-xs">
-      <div class="col-6 q-mt-sm">
-        <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true"/>
-      </div>
-      <div class="col-6 text-right">
-        <template v-if="useWindowsStore().allWindows.size > 1">
-          Current Window only
-          <q-checkbox v-model="currentWindowOnly"/>
-        </template>
-      </div>
-      <div class="col-12 q-mb-xs">
-        <q-input
-          dense
-          autofocus
-          ref="filterRef"
-          filled
-          :hint="filterHint()"
-          v-model="filter"
-          label="Filter Tabs">
-          <template v-slot:append>
-            <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter"/>
-          </template>
-        </q-input>
-      </div>
+  <div class="row q-mt-xs">
+    <div class="col-6 q-mt-sm">
+      <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true"/>
     </div>
+    <div class="col-6 text-right">
+      <template v-if="useWindowsStore().allWindows.size > 1">
+        Current Window only
+        <q-checkbox v-model="currentWindowOnly"/>
+      </template>
+    </div>
+    <div class="col-12 q-mb-xs">
+      <q-input
+        dense
+        autofocus
+        ref="filterRef"
+        filled
+        :hint="filterHint()"
+        v-model="filter"
+        label="Filter Tabs">
+        <template v-slot:append>
+          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter"/>
+        </template>
+      </q-input>
+    </div>
+  </div>
 
-  </q-list>
 
   <div class="q-pa-none q-ma-none">
 
