@@ -88,7 +88,6 @@
 import _ from "lodash";
 import {onMounted, ref, watchEffect} from "vue"
 import {VueDraggableNext} from 'vue-draggable-next'
-import InfoMessageWidget from "src/ui/widgets/InfoMessageWidget.vue";
 import {useUiStore} from "src/ui/stores/uiStore";
 import Analytics from "src/core/utils/google-analytics";
 import {useWindowsStore} from "src/windows/stores/windowsStore";
