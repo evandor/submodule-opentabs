@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 
-import FirstToolbarHelper from "pages/sidepanel/helper/FirstToolbarHelper.vue";
+import FirstToolbarHelper from "pages/sidepanel/helper/FirstToolbarHelper2.vue";
 import {useUiStore} from "src/ui/stores/uiStore";
 import {onMounted} from "vue";
 import Analytics from "src/core/utils/google-analytics";
