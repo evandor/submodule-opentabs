@@ -16,7 +16,7 @@
 
     <!-- place QPageSticky at end of page -->
     <q-page-sticky expand position="top" class="darkInDarkMode brightInBrightMode">
-      <FirstToolbarHelper title="Open Tabs">
+      <FirstToolbarHelper2 title="Open Tabs">
 
         <template v-slot:iconsRight>
 
@@ -29,7 +29,7 @@
           />
         </template>
 
-      </FirstToolbarHelper>
+      </FirstToolbarHelper2>
     </q-page-sticky>
 
   </q-page>
@@ -38,7 +38,7 @@
 
 <script lang="ts" setup>
 
-import FirstToolbarHelper from "pages/sidepanel/helper/FirstToolbarHelper2.vue";
+import FirstToolbarHelper2 from "pages/sidepanel/helper/FirstToolbarHelper2.vue";
 import {useUiStore} from "src/ui/stores/uiStore";
 import {onMounted} from "vue";
 import Analytics from "src/core/utils/google-analytics";
