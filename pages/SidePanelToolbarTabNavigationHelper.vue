@@ -5,14 +5,14 @@
       tooltip="Back to last tab"
       :disable="useTabsStore2().chromeTabsHistoryPosition === 0"
       :color="useTabsStore2().chromeTabsHistoryPosition === 0 ? 'grey' : 'primary'"
-      @click="NavigationService.backOneTab()"/>
+      @click.stop="NavigationService.backOneTab()"/>
 
     <SidePanelToolbarButton class="q-mr-sm"
       icon="chevron_right"
       tooltip="Return to tab before"
       :disable="useTabsStore2().chromeTabsHistoryPosition === useTabsStore2().chromeTabsHistory.length-1"
       :color="useTabsStore2().chromeTabsHistoryPosition === useTabsStore2().chromeTabsHistory.length-1 ? 'grey' : 'primary'"
-      @click="NavigationService.forwardOneTab()"/>
+      @click.stop="NavigationService.forwardOneTab()"/>
 
   </template>
 </template>
