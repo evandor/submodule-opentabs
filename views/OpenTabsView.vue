@@ -61,7 +61,7 @@
                 <div
                     class="col-12 q-pa-xs items-center justify-center" style="width:100%; max-width: 300px;cursor: move"
                     v-for="tab in tabs"
-                    :key="tab.id">
+                    :key="tab.id!">
 
                   <OpenTabCard2
                       v-on:selectionChanged="tabSelectionChanged"
