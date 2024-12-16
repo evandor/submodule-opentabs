@@ -151,7 +151,7 @@ const hasSelectable = () => userCanSelect.value = true
 const resetFilter = () => {
   filter.value = ''
   if (filterRef.value) {
-    // @ts-ignore
+    // @ts-expect-error
     filterRef.value.focus()
   }
 }
