@@ -3,12 +3,12 @@
 
   <div class="row q-mt-xs">
     <div class="col-6 q-mt-sm">
-      <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true"/>
+      <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true" />
     </div>
     <div class="col-6 text-right">
       <template v-if="useWindowsStore().allWindows.size > 1">
         Current Window only
-        <q-checkbox v-model="currentWindowOnly"/>
+        <q-checkbox v-model="currentWindowOnly" />
       </template>
     </div>
     <div class="col-11 q-mb-xs">
@@ -19,75 +19,82 @@
         filled
         :hint="filterHint()"
         v-model="filter"
-        label="Filter Tabs">
+        label="Filter Tabs"
+      >
         <template v-slot:append>
-          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter"/>
+          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
       </q-input>
     </div>
     <div class="col text-right">
-      <q-icon :name="sortByUrl ? 'undo': 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">
+      <q-icon
+        :name="sortByUrl ? 'undo' : 'sort'"
+        color="primary"
+        class="cursor-pointer"
+        @click="toggleSorting()"
+      >
         <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>
       </q-icon>
     </div>
   </div>
 
-
   <div class="q-pa-none q-ma-none">
-
     <template v-if="currentWindowOnly">
-      <div v-for="tab in tabsForCurrentWindow"
-           class="q-my-none tabBorder q-mb-xs"
-           :style="cardStyle(tab)">
+      <div
+        v-for="tab in tabsForCurrentWindow"
+        class="q-my-none tabBorder q-mb-xs"
+        :style="cardStyle(tab)"
+      >
         <OpenTabCard2
           v-on:selectionChanged="tabSelectionChanged"
           v-on:addedToTabset="tabAddedToTabset"
           v-on:hasSelectable="hasSelectable"
           :chromeTab="tab"
           :windowId="useWindowsStore().currentChromeWindow?.id || 0"
-          :useSelection="useSelection"/>
+          :useSelection="useSelection"
+        />
       </div>
     </template>
 
     <template v-else>
-      <q-expansion-item v-for="w in rows"
-                        default-opened
-                        dense-toggle
-                        expand-separator
-                        icon="o_grid_view"
-                        :label="w['name' as keyof object]"
-                        :caption="w['tabsCount' as keyof object] +  ' tab(s)'">
-        <div class="q-my-none tabBorder q-mb-xs"
-             v-for="tab in filteredTabs(w['tabs' as keyof object] as chrome.tabs.Tab[])">
+      <q-expansion-item
+        v-for="w in rows"
+        default-opened
+        dense-toggle
+        expand-separator
+        icon="o_grid_view"
+        :label="w['name' as keyof object]"
+        :caption="w['tabsCount' as keyof object] + ' tab(s)'"
+      >
+        <div
+          class="q-my-none tabBorder q-mb-xs"
+          v-for="tab in filteredTabs(w['tabs' as keyof object] as chrome.tabs.Tab[])"
+        >
           <OpenTabCard2
             v-on:selectionChanged="tabSelectionChanged"
             v-on:addedToTabset="tabAddedToTabset"
             v-on:hasSelectable="hasSelectable"
             :chromeTab="tab"
             :windowId="w['id' as keyof object]"
-            :useSelection="useSelection"/>
+            :useSelection="useSelection"
+          />
         </div>
-
       </q-expansion-item>
     </template>
-
-
   </div>
-
-
 </template>
 
 <script setup lang="ts">
-import _ from "lodash";
-import {onMounted, ref, watchEffect} from "vue"
-import {useTabsetService} from "src/tabsets/services/TabsetService2";
-import {useUiStore} from "src/ui/stores/uiStore";
-import Analytics from "src/core/utils/google-analytics";
-import {useWindowsStore} from "src/windows/stores/windowsStore";
-import {Window} from "src/windows/models/Window";
-import SidePanelTabsetsSelectorWidget from "components/widgets/SidePanelTabsetsSelectorWidget.vue";
-import {useTabsStore2} from "src/tabsets/stores/tabsStore2";
-import OpenTabCard2 from "src/opentabs/components/OpenTabCard2.vue";
+import _ from 'lodash'
+import { onMounted, ref, watchEffect } from 'vue'
+import { useTabsetService } from 'src/tabsets/services/TabsetService2'
+import { useUiStore } from 'src/ui/stores/uiStore'
+import Analytics from 'src/core/utils/google-analytics'
+import { useWindowsStore } from 'src/windows/stores/windowsStore'
+import { Window } from 'src/windows/models/Window'
+import SidePanelTabsetsSelectorWidget from 'components/widgets/SidePanelTabsetsSelectorWidget.vue'
+import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
+import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
 import { TabsSortingCommand } from 'src/opentabs/commands/TabsSortingCommand'
 
@@ -105,25 +112,32 @@ const rows = ref<object[]>([])
 const sortByUrl = ref(false)
 
 onMounted(async () => {
-  Analytics.firePageViewEvent('SidePanelOpenTabsListViewer', document.location.href);
+  Analytics.firePageViewEvent('SidePanelOpenTabsListViewer', document.location.href)
   rows.value = await calcWindowRows()
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
 
-chrome.windows.onCreated.addListener(async (w: chrome.windows.Window) => rows.value = await calcWindowRows())
-chrome.windows.onRemoved.addListener(async (wId: Number) => rows.value = await calcWindowRows())
-chrome.tabs.onUpdated.addListener(async (a: any, b: any, c: any) => rows.value = await calcWindowRows())
-chrome.tabs.onCreated.addListener(async (a: any) => rows.value = await calcWindowRows())
-chrome.tabs.onRemoved.addListener(async (a: any, b: any) => rows.value = await calcWindowRows())
+chrome.windows.onCreated.addListener(
+  async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()),
+)
+chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await calcWindowRows()))
+chrome.tabs.onUpdated.addListener(
+  async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()),
+)
+chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
+chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
 
 const filteredTabs = (tabs: chrome.tabs.Tab[]) => {
-  const res = _.filter(tabs, (t: chrome.tabs.Tab) => (t.title || 'unknown title').toLowerCase().indexOf(filter.value) >= 0)
+  const res = _.filter(
+    tabs,
+    (t: chrome.tabs.Tab) => (t.title || 'unknown title').toLowerCase().indexOf(filter.value) >= 0,
+  )
   filteredTabsCount.value = res.length
   return res
 }
 
 watchEffect(() => {
-  console.log("*********", useTabsStore2().browserTabs)
+  console.log('*********', useTabsStore2().browserTabs)
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
 
@@ -131,9 +145,14 @@ watchEffect(() => {
   tabs.value = useTabsStore2().browserTabs
   const filterTerm = useUiStore().toolbarFilterTerm.toLowerCase()
   if (filterTerm.length > 0) {
-    tabs.value = _.filter(tabs.value, (t: chrome.tabs.Tab) =>
-      !!(t.url && t.url?.indexOf(filterTerm) >= 0 ||
-        (t.title && t.title.toLowerCase()?.indexOf(filterTerm) >= 0)))
+    tabs.value = _.filter(
+      tabs.value,
+      (t: chrome.tabs.Tab) =>
+        !!(
+          (t.url && t.url?.indexOf(filterTerm) >= 0) ||
+          (t.title && t.title.toLowerCase()?.indexOf(filterTerm) >= 0)
+        ),
+    )
   }
 })
 
@@ -142,7 +161,7 @@ watchEffect(() => {
 })
 
 const tabSelectionChanged = (a: any) => {
-  const {tabId, selected} = a
+  const { tabId, selected } = a
   if (selected) {
     tabSelection.value.add(tabId)
   } else {
@@ -151,11 +170,11 @@ const tabSelectionChanged = (a: any) => {
 }
 
 const tabAddedToTabset = (a: any) => {
-  const {tabId} = a
+  const { tabId } = a
   tabSelection.value.delete(tabId)
 }
 
-const hasSelectable = () => userCanSelect.value = true
+const hasSelectable = () => (userCanSelect.value = true)
 
 const resetFilter = () => {
   filter.value = ''
@@ -167,30 +186,33 @@ const resetFilter = () => {
 
 const calcWindowRows = async () => {
   await useWindowsStore().refreshCurrentWindows()
-  const result = _.map(useWindowsStore().currentChromeWindows as chrome.windows.Window[], (cw: chrome.windows.Window) => {
-    const windowFromStore: Window | undefined = useWindowsStore().windowForId(cw.id || -2)
+  const result = _.map(
+    useWindowsStore().currentChromeWindows as chrome.windows.Window[],
+    (cw: chrome.windows.Window) => {
+      const windowFromStore: Window | undefined = useWindowsStore().windowForId(cw.id || -2)
 
-    return {
-      id: cw.id,
-      index: windowFromStore?.index || 0,
-      tabsCount: cw.tabs?.length || 0,
-      tabs: cw.tabs,
-      name: useWindowsStore().windowNameFor(cw.id || 0) || cw.id!.toString(),
-      focused: cw.focused,
-      state: cw.state,
-      type: cw.type
-    }
-  })
-  return result// _.sortBy(result, "index")
+      return {
+        id: cw.id,
+        index: windowFromStore?.index || 0,
+        tabsCount: cw.tabs?.length || 0,
+        tabs: cw.tabs,
+        name: useWindowsStore().windowNameFor(cw.id || 0) || cw.id!.toString(),
+        focused: cw.focused,
+        state: cw.state,
+        type: cw.type,
+      }
+    },
+  )
+  return result // _.sortBy(result, "index")
 }
 
 const cardStyle = (tab: chrome.tabs.Tab) => {
   let background = ''
   if (hasDuplicate(tab)) {
-    background = "background: radial-gradient(circle, #FFFFFF 0%, #FFECB3 100%)"
+    background = 'background: radial-gradient(circle, #FFFFFF 0%, #FFECB3 100%)'
   }
   if (useTabsetService().urlExistsInCurrentTabset(tab.url || '')) {
-    background = "background: #efefef"
+    background = 'background: #efefef'
   } else {
     // emits('hasSelectable', true)
   }
@@ -198,20 +220,26 @@ const cardStyle = (tab: chrome.tabs.Tab) => {
 }
 
 const hasDuplicate = (tab: chrome.tabs.Tab) => {
-  const allCurrentTabs: chrome.tabs.Tab[] = (useWindowsStore().currentChromeWindow?.tabs || []) as chrome.tabs.Tab[]
-  return _.filter(allCurrentTabs, (t: chrome.tabs.Tab) => {
-    if (tab.url && t.url === tab.url) {
-      return true
-    }
-    return false
-  }).length > 1
+  const allCurrentTabs: chrome.tabs.Tab[] = (useWindowsStore().currentChromeWindow?.tabs ||
+    []) as chrome.tabs.Tab[]
+  return (
+    _.filter(allCurrentTabs, (t: chrome.tabs.Tab) => {
+      if (tab.url && t.url === tab.url) {
+        return true
+      }
+      return false
+    }).length > 1
+  )
 }
 
 const filterHint = () => {
   if (filter.value.trim() === '') {
-    return currentWindowOnly.value ?
-      'window has ' + tabsForCurrentWindow.value.length + ' tab' + (tabsForCurrentWindow.value.length === 1 ? '' : 's') :
-      ''
+    return currentWindowOnly.value
+      ? 'window has ' +
+          tabsForCurrentWindow.value.length +
+          ' tab' +
+          (tabsForCurrentWindow.value.length === 1 ? '' : 's')
+      : ''
   }
   return 'found ' + filteredTabsCount.value + ' tab' + (filteredTabsCount.value === 1 ? '' : 's')
 }
@@ -222,12 +250,10 @@ const toggleSorting = () => {
 }
 </script>
 
-
 <style lang="sass" scoped>
 
 .tabBorder
   border-radius: 5px 5px 0 0
   border: 1px solid $lightgrey
   border-bottom: 0
-
 </style>

@@ -6,7 +6,6 @@ import { computed, ref } from 'vue'
  *
  */
 export const useOpenTabsStore = defineStore('opentabs', () => {
-
   const openTabsMap = ref<Map<number, { index: number; url: string }>>(new Map())
 
   const setTabsMap = (map: Map<number, { index: number; url: string }>) => {
@@ -19,6 +18,6 @@ export const useOpenTabsStore = defineStore('opentabs', () => {
 
   return {
     setTabsMap,
-    getTabsMap
+    getTabsMap,
   }
 })
