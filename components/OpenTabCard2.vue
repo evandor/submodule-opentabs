@@ -23,7 +23,7 @@
          @click="NavigationService.openChromeTab(chromeTab)">
       {{ chromeTab?.title }}
       <q-tooltip class="tooltip" v-if="useFeaturesStore().hasFeature(FeatureIdent.DEV_MODE)">
-        {{ chromeTab.id }} / {{ chromeTab.url }}
+        {{ chromeTab.id }} / {{ chromeTab.url }} / {{ chromeTab.index }}
       </q-tooltip>
       <q-tooltip class="tooltip" v-else>
         {{ chromeTab.url }}

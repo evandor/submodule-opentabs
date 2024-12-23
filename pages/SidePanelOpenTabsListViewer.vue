@@ -11,7 +11,7 @@
         <q-checkbox v-model="currentWindowOnly"/>
       </template>
     </div>
-    <div class="col-12 q-mb-xs">
+    <div class="col-11 q-mb-xs">
       <q-input
         dense
         autofocus
@@ -24,6 +24,11 @@
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter"/>
         </template>
       </q-input>
+    </div>
+    <div class="col text-right">
+      <q-icon :name="sortByUrl ? 'undo': 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">
+        <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>
+      </q-icon>
     </div>
   </div>
 
@@ -83,6 +88,8 @@ import {Window} from "src/windows/models/Window";
 import SidePanelTabsetsSelectorWidget from "components/widgets/SidePanelTabsetsSelectorWidget.vue";
 import {useTabsStore2} from "src/tabsets/stores/tabsStore2";
 import OpenTabCard2 from "src/opentabs/components/OpenTabCard2.vue";
+import { useCommandExecutor } from 'src/core/services/CommandExecutor'
+import { TabsSortingCommand } from 'src/opentabs/commands/TabsSortingCommand'
 
 const useSelection = ref(false)
 const userCanSelect = ref(false)
@@ -95,6 +102,7 @@ const filter = ref('')
 const filterRef = ref(null)
 const filteredTabsCount = ref(0)
 const rows = ref<object[]>([])
+const sortByUrl = ref(false)
 
 onMounted(async () => {
   Analytics.firePageViewEvent('SidePanelOpenTabsListViewer', document.location.href);
@@ -115,6 +123,7 @@ const filteredTabs = (tabs: chrome.tabs.Tab[]) => {
 }
 
 watchEffect(() => {
+  console.log("*********", useTabsStore2().browserTabs)
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
 
@@ -207,6 +216,10 @@ const filterHint = () => {
   return 'found ' + filteredTabsCount.value + ' tab' + (filteredTabsCount.value === 1 ? '' : 's')
 }
 
+const toggleSorting = () => {
+  sortByUrl.value = !sortByUrl.value
+  useCommandExecutor().executeFromUi(new TabsSortingCommand(sortByUrl.value))
+}
 </script>
 
 
