@@ -86,15 +86,15 @@
 
 <script setup lang="ts">
 import _ from 'lodash'
+import Analytics from 'src/core/utils/google-analytics'
+import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
+import TabsetService from 'src/tabsets/services/TabsetService'
+import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
+import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
+import { useUiStore } from 'src/ui/stores/uiStore'
+import { useWindowsStore } from 'src/windows/stores/windowsStore'
 import { onMounted, ref, watchEffect } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useUiStore } from 'src/ui/stores/uiStore'
-import Analytics from 'src/core/utils/google-analytics'
-import { useWindowsStore } from 'src/windows/stores/windowsStore'
-import TabsetService from 'src/tabsets/services/TabsetService'
-import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
-import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
-import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
 
 const useSelection = ref(false)
 const invert = ref(false)

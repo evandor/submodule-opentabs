@@ -26,8 +26,8 @@
 </template>
 <script setup lang="ts">
 import { FeatureIdent } from 'src/app/models/FeatureIdent'
-import NavigationService from 'src/services/NavigationService'
 import SidePanelToolbarButton from 'src/core/components/SidePanelToolbarButton.vue'
 import { useFeaturesStore } from 'src/features/stores/featuresStore'
+import NavigationService from 'src/services/NavigationService'
 import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
 </script>

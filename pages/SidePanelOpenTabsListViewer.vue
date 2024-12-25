@@ -85,18 +85,18 @@
 </template>
 
 <script setup lang="ts">
-import _ from 'lodash'
-import { onMounted, ref, watchEffect } from 'vue'
-import { useTabsetService } from 'src/tabsets/services/TabsetService2'
-import { useUiStore } from 'src/ui/stores/uiStore'
-import Analytics from 'src/core/utils/google-analytics'
-import { useWindowsStore } from 'src/windows/stores/windowsStore'
-import { Window } from 'src/windows/models/Window'
 import SidePanelTabsetsSelectorWidget from 'components/widgets/SidePanelTabsetsSelectorWidget.vue'
-import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
-import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
+import _ from 'lodash'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
+import Analytics from 'src/core/utils/google-analytics'
 import { TabsSortingCommand } from 'src/opentabs/commands/TabsSortingCommand'
+import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
+import { useTabsetService } from 'src/tabsets/services/TabsetService2'
+import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
+import { useUiStore } from 'src/ui/stores/uiStore'
+import { Window } from 'src/windows/models/Window'
+import { useWindowsStore } from 'src/windows/stores/windowsStore'
+import { onMounted, ref, watchEffect } from 'vue'
 
 const useSelection = ref(false)
 const userCanSelect = ref(false)

@@ -30,13 +30,13 @@
 
 <script lang="ts" setup>
 import FirstToolbarHelper2 from 'pages/sidepanel/helper/FirstToolbarHelper2.vue'
+import { SidePanelViews } from 'src/app/models/SidePanelViews'
+import SidePanelToolbarButton from 'src/core/components/SidePanelToolbarButton.vue'
+import Analytics from 'src/core/utils/google-analytics'
+import SidePanelOpenTabsListViewer from 'src/opentabs/pages/SidePanelOpenTabsListViewer.vue'
+import SidePanelToolbarTabNavigationHelper from 'src/opentabs/pages/SidePanelToolbarTabNavigationHelper.vue'
 import { useUiStore } from 'src/ui/stores/uiStore'
 import { onMounted } from 'vue'
-import Analytics from 'src/core/utils/google-analytics'
-import SidePanelToolbarTabNavigationHelper from 'src/opentabs/pages/SidePanelToolbarTabNavigationHelper.vue'
-import SidePanelToolbarButton from 'src/core/components/SidePanelToolbarButton.vue'
-import SidePanelOpenTabsListViewer from 'src/opentabs/pages/SidePanelOpenTabsListViewer.vue'
-import { SidePanelViews } from 'src/app/models/SidePanelViews'
 
 onMounted(() => {
   Analytics.firePageViewEvent('SidePanelOpenTabsPage', document.location.href)

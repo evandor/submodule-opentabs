@@ -74,17 +74,17 @@
 </template>
 
 <script setup lang="ts">
-import { Tab } from 'src/tabsets/models/Tab'
-import NavigationService from 'src/services/NavigationService'
-import TabFaviconWidget from 'src/tabsets/widgets/TabFaviconWidget.vue'
-import { useTabsetService } from 'src/tabsets/services/TabsetService2'
-import { useCommandExecutor } from 'src/core/services/CommandExecutor'
-import { CreateTabFromOpenTabsCommand } from 'src/tabsets/commands/CreateTabFromOpenTabs'
-import { onMounted, PropType, ref } from 'vue'
 import { uid } from 'quasar'
-import TabService from 'src/services/TabService'
-import { useFeaturesStore } from 'src/features/stores/featuresStore'
 import { FeatureIdent } from 'src/app/models/FeatureIdent'
+import { useCommandExecutor } from 'src/core/services/CommandExecutor'
+import { useFeaturesStore } from 'src/features/stores/featuresStore'
+import NavigationService from 'src/services/NavigationService'
+import TabService from 'src/services/TabService'
+import { CreateTabFromOpenTabsCommand } from 'src/tabsets/commands/CreateTabFromOpenTabs'
+import { Tab } from 'src/tabsets/models/Tab'
+import { useTabsetService } from 'src/tabsets/services/TabsetService2'
+import TabFaviconWidget from 'src/tabsets/widgets/TabFaviconWidget.vue'
+import { onMounted, PropType, ref } from 'vue'
 import { useTabsetsStore } from '../../tabsets/stores/tabsetsStore'
 
 const props = defineProps({

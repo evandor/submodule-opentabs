@@ -89,19 +89,19 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, watchEffect } from 'vue'
-import { useQuasar } from 'quasar'
 import _ from 'lodash'
-import { Tabset, TabsetType } from 'src/tabsets/models/Tabset'
-import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
-import TabsetService from 'src/tabsets/services/TabsetService'
-import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
-import { useFeaturesStore } from 'src/features/stores/featuresStore'
-import { useUtils } from 'src/core/services/Utils'
+import { useQuasar } from 'quasar'
 import { FeatureIdent } from 'src/app/models/FeatureIdent'
-import { DrawerTabs, useUiStore } from 'src/ui/stores/uiStore'
-import { useSettingsStore } from 'src/stores/settingsStore'
+import { useUtils } from 'src/core/services/Utils'
+import { useFeaturesStore } from 'src/features/stores/featuresStore'
 import BackupAndCloseDialog from 'src/opentabs/dialogues/BackupAndCloseDialog.vue'
+import { useSettingsStore } from 'src/stores/settingsStore'
+import { Tabset, TabsetType } from 'src/tabsets/models/Tabset'
+import TabsetService from 'src/tabsets/services/TabsetService'
+import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
+import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
+import { DrawerTabs, useUiStore } from 'src/ui/stores/uiStore'
+import { ref, watch, watchEffect } from 'vue'
 
 const settingsStore = useSettingsStore()
 const $q = useQuasar()

@@ -21,9 +21,9 @@
 
 <script lang="ts" setup>
 import { uid, useDialogPluginComponent } from 'quasar'
-import { useTabsetService } from 'src/tabsets/services/TabsetService2'
 import { Tab } from 'src/tabsets/models/Tab'
 import TabsetService from 'src/tabsets/services/TabsetService'
+import { useTabsetService } from 'src/tabsets/services/TabsetService2'
 import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
 
 defineEmits([...useDialogPluginComponent.emits])
