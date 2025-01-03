@@ -6,8 +6,8 @@
       </q-card-section>
       <q-card-section>
         <div class="text-body">
-          If you click on 'Backup and close tabs', all tabs which are already contained in a tabset
-          will be closed, and all the others will be moved to the dedicated 'backup' tabset.
+          If you click on 'Backup and close tabs', all tabs which are already contained in a tabset will be closed, and
+          all the others will be moved to the dedicated 'backup' tabset.
         </div>
       </q-card-section>
 

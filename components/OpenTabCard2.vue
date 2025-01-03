@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="row q-ma-none q-pa-none"
-    @mouseenter="showIcons = true"
-    @mouseleave="showIcons = false"
-  >
+  <div class="row q-ma-none q-pa-none" @mouseenter="showIcons = true" @mouseleave="showIcons = false">
     <div class="col-2 q-mt-xs" style="text-align: center">
       <q-checkbox
         v-if="showSelectIcon(chromeTab)"
@@ -11,21 +7,14 @@
         size="30px"
         checked-icon="task_alt"
         @update:model-value="(val) => selectionChanged(val)"
-        unchecked-icon="check_box_outline_blank"
-      />
-      <TabFaviconWidget
-        :preventDragAndDrop="true"
-        :tab="toTab(chromeTab)"
-        width="20px"
-        height="20px"
-      />
+        unchecked-icon="check_box_outline_blank" />
+      <TabFaviconWidget :preventDragAndDrop="true" :tab="toTab(chromeTab)" width="20px" height="20px" />
     </div>
 
     <div
       class="col-7 q-mt-sm q-ml-xs text-body2 ellipsis cursor-pointer"
       :class="TabService.isCurrentTab(toTab(chromeTab)) ? 'text-bold' : ''"
-      @click="NavigationService.openChromeTab(chromeTab)"
-    >
+      @click="NavigationService.openChromeTab(chromeTab)">
       {{ chromeTab?.title }}
       <q-tooltip class="tooltip" v-if="useFeaturesStore().hasFeature(FeatureIdent.DEV_MODE)">
         {{ chromeTab.id }} / {{ chromeTab.url }} / {{ chromeTab.index }}
@@ -35,11 +24,7 @@
       </q-tooltip>
     </div>
     <div class="col-1 q-mt-xs text-right">
-      <q-icon
-        v-if="existsInTabset"
-        name="link"
-        :color="existsInCurrentTabset ? 'green' : 'warning'"
-      >
+      <q-icon v-if="existsInTabset" name="link" :color="existsInCurrentTabset ? 'green' : 'warning'">
         <q-tooltip class="tooltip-small" v-if="existsInCurrentTabset"
           >Already contained in the current tabset</q-tooltip
         >
@@ -54,8 +39,7 @@
           class="q-mr-xs"
           :class="alreadyInCurrentTabset ? '' : 'cursor-pointer'"
           size="xs"
-          @click="addToCurrentTabset"
-        >
+          @click="addToCurrentTabset">
           <q-tooltip class="tooltip" v-if="alreadyInCurrentTabset"
             >This tab has already been added to
             {{ useTabsetsStore().currentTabsetName }}
@@ -122,9 +106,7 @@ const selectionChanged = (val: any) => {
   emits('selectionChanged', { tabId: props.chromeTab.id, selected: val })
 }
 
-alreadyInCurrentTabset.value = useTabsetService().urlExistsInCurrentTabset(
-  props.chromeTab.url || '',
-)
+alreadyInCurrentTabset.value = useTabsetService().urlExistsInCurrentTabset(props.chromeTab.url || '')
 
 const showSelectIcon = (tab: chrome.tabs.Tab) =>
   props.useSelection && !useTabsetService().urlExistsInCurrentTabset(tab.url || '')

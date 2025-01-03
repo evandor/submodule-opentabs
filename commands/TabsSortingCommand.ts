@@ -16,16 +16,10 @@ export class TabsSortingCommand implements Command<string> {
           .map((obj) => [obj.id!, { index: obj.index, url: obj.url! }]),
       )
       useOpenTabsStore().setTabsMap(this.tabsMap)
-      const sortedMap = new Map(
-        [...this.tabsMap.entries()].sort((a, b) => a[1].url?.localeCompare(b[1].url)),
-      )
+      const sortedMap = new Map([...this.tabsMap.entries()].sort((a, b) => a[1].url?.localeCompare(b[1].url)))
       await chrome.tabs.move(Array.from(sortedMap.keys()), { index: -1 })
       return Promise.resolve(
-        new ExecutionResult(
-          '',
-          'tabs sorted by URL',
-          new Map([['Undo', new TabsSortingCommand(!this.sortByUrl)]]),
-        ),
+        new ExecutionResult('', 'tabs sorted by URL', new Map([['Undo', new TabsSortingCommand(!this.sortByUrl)]])),
       )
     }
     const tabsMap = useOpenTabsStore().getTabsMap

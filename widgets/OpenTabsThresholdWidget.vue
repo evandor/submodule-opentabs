@@ -1,16 +1,12 @@
 <template>
-  <span
-    class="cursor-pointer text-right"
-    :style="props.showLabel ? 'min-width:160px' : 'max-width:30px'"
-  >
+  <span class="cursor-pointer text-right" :style="props.showLabel ? 'min-width:160px' : 'max-width:30px'">
     <q-badge
       v-if="showThresholdBar() && props.showLabel"
       :multi-line="false"
       class="q-mr-sm"
       color="primary"
       text-color="white"
-      :label="thresholdLabel()"
-    >
+      :label="thresholdLabel()">
     </q-badge>
 
     <q-circular-progress
@@ -22,12 +18,9 @@
       :thickness="0.5"
       :style="thresholdStyle()"
       track-color="grey-3"
-      class="q-ml-xs"
-    >
+      class="q-ml-xs">
     </q-circular-progress>
-    <q-tooltip class="tooltip"
-      >Open Tabs: {{ useTabsStore2().browserTabs.length }} - click to manage</q-tooltip
-    >
+    <q-tooltip class="tooltip">Open Tabs: {{ useTabsStore2().browserTabs.length }} - click to manage</q-tooltip>
   </span>
   <q-menu :offset="[0, 15]">
     <q-list style="min-width: 200px">
@@ -40,32 +33,21 @@
         :disable="useTabsetsStore().tabsets?.size === 0 || trackedTabsCount === 0"
         clickable
         v-close-popup
-        @click="TabsetService.closeTrackedTabs()"
-      >
+        @click="TabsetService.closeTrackedTabs()">
         <q-item-section>&bull; Close all tracked tabs ({{ trackedTabsCount }})</q-item-section>
       </q-item>
       <!--      <q-item clickable v-close-popup @click="TabsetService.closeDuplictedOpenTabs()">-->
       <!--        <q-item-section>&bull; Close duplicated open tabs</q-item-section>-->
       <!--      </q-item>-->
-      <q-item
-        v-if="useFeaturesStore().hasFeature(FeatureIdent.BACKUP)"
-        clickable
-        v-close-popup
-        @click="backupAndClose"
-      >
+      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.BACKUP)" clickable v-close-popup @click="backupAndClose">
         <q-item-section>&bull; Backup and close current tabs...</q-item-section>
       </q-item>
       <q-item
         :disable="useTabsStore2().browserTabs.length <= 1"
         clickable
         v-close-popup
-        @click="TabsetService.closeAllTabs()"
-      >
-        <q-item-section
-          >&bull; Close all other tabs ({{
-            useTabsStore2().browserTabs.length - 1
-          }})</q-item-section
-        >
+        @click="TabsetService.closeAllTabs()">
+        <q-item-section>&bull; Close all other tabs ({{ useTabsStore2().browserTabs.length - 1 }})</q-item-section>
       </q-item>
       <q-separator />
       <q-item disable v-if="showSpecialTabsets()"> Use special tabsets: </q-item>
@@ -129,11 +111,7 @@ watchEffect(() => {
   )
   //console.log("threshold", settingsStore.thresholds['max' as keyof object])
   openTabsCountRatio2.value = Math.round(
-    100 *
-      Math.min(
-        useTabsStore2().browserTabs.length / settingsStore.thresholds['max' as keyof object],
-        1,
-      ),
+    100 * Math.min(useTabsStore2().browserTabs.length / settingsStore.thresholds['max' as keyof object], 1),
   )
 })
 
@@ -162,11 +140,9 @@ watch(
 
 //watchEffect(() => TabsetService.trackedTabsCount().then((res) => trackedTabsCount.value = res))
 
-const showThresholdBar = () =>
-  useTabsStore2().browserTabs.length >= settingsStore.thresholds['min' as keyof object]
+const showThresholdBar = () => useTabsStore2().browserTabs.length >= settingsStore.thresholds['min' as keyof object]
 
-const thresholdStyle = () =>
-  'color: hsl(' + (120 - Math.round(120 * openTabsCountRatio.value)) + ' 80% 50%)'
+const thresholdStyle = () => 'color: hsl(' + (120 - Math.round(120 * openTabsCountRatio.value)) + ' 80% 50%)'
 
 const thresholdLabel = () => useTabsStore2().browserTabs.length + ' open tabs'
 
@@ -174,10 +150,7 @@ const showOpenTabs = () => useUiStore().rightDrawerSetActiveTab(DrawerTabs.UNASS
 
 watchEffect(() => {
   existingSession.value =
-    _.filter(
-      [...useTabsetsStore().tabsets.values()],
-      (ts: Tabset) => ts.type === TabsetType.SESSION,
-    ).length > 0
+    _.filter([...useTabsetsStore().tabsets.values()], (ts: Tabset) => ts.type === TabsetType.SESSION).length > 0
 })
 
 // const startSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: false}})

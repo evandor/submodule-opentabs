@@ -13,8 +13,7 @@
         <div
           v-if="useTabsetsStore().currentTabsetId && tabs.length > 1 && userCanSelect"
           class="q-ma-none"
-          style="border: 1px dotted grey; border-radius: 3px"
-        >
+          style="border: 1px dotted grey; border-radius: 3px">
           <div class="row">
             <div class="col-6 q-pa-xs">
               <q-btn
@@ -23,8 +22,7 @@
                 size="11px"
                 icon="keyboard_double_arrow_left"
                 :label="addLabel()"
-                @click="saveSelectedTabs()"
-              >
+                @click="saveSelectedTabs()">
                 <q-tooltip class="tooltip" v-html="addTooltip()"></q-tooltip>
               </q-btn>
             </div>
@@ -40,8 +38,7 @@
                 size="30px"
                 label="invert"
                 checked-icon="task_alt"
-                unchecked-icon="check_box_outline_blank"
-              />
+                unchecked-icon="check_box_outline_blank" />
 
               <q-checkbox
                 left-label
@@ -52,31 +49,24 @@
                 size="30px"
                 :label="checkboxLabel()"
                 checked-icon="task_alt"
-                unchecked-icon="check_box_outline_blank"
-              />
+                unchecked-icon="check_box_outline_blank" />
             </div>
           </div>
         </div>
 
-        <vue-draggable-next
-          :list="tabs"
-          :group="{ name: 'tabs', pull: 'clone', put: false }"
-          :sort="true"
-        >
+        <vue-draggable-next :list="tabs" :group="{ name: 'tabs', pull: 'clone', put: false }" :sort="true">
           <div
             class="col-12 q-pa-xs items-center justify-center"
             style="width: 100%; max-width: 300px; cursor: move"
             v-for="tab in tabs"
-            :key="tab.id!"
-          >
+            :key="tab.id!">
             <OpenTabCard2
               v-on:selectionChanged="tabSelectionChanged"
               v-on:addedToTabset="tabAddedToTabset"
               v-on:hasSelectable="hasSelectable"
               :chromeTab="tab"
               :windowId="useWindowsStore().currentChromeWindow?.id || 0"
-              :useSelection="useSelection"
-            />
+              :useSelection="useSelection" />
           </div>
         </vue-draggable-next>
       </div>
@@ -114,10 +104,7 @@ watchEffect(() => {
     tabs.value = _.filter(
       tabs.value,
       (t: chrome.tabs.Tab) =>
-        !!(
-          (t.url && t.url?.indexOf(filterTerm) >= 0) ||
-          (t.title && t.title.toLowerCase()?.indexOf(filterTerm) >= 0)
-        ),
+        !!((t.url && t.url?.indexOf(filterTerm) >= 0) || (t.title && t.title.toLowerCase()?.indexOf(filterTerm) >= 0)),
     )
   }
 })

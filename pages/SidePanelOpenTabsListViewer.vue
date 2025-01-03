@@ -12,27 +12,14 @@
       </template>
     </div>
     <div class="col-11 q-mb-xs">
-      <q-input
-        dense
-        autofocus
-        ref="filterRef"
-        filled
-        :hint="filterHint()"
-        v-model="filter"
-        label="Filter Tabs"
-      >
+      <q-input dense autofocus ref="filterRef" filled :hint="filterHint()" v-model="filter" label="Filter Tabs">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
       </q-input>
     </div>
     <div class="col text-right">
-      <q-icon
-        :name="sortByUrl ? 'undo' : 'sort'"
-        color="primary"
-        class="cursor-pointer"
-        @click="toggleSorting()"
-      >
+      <q-icon :name="sortByUrl ? 'undo' : 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">
         <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>
       </q-icon>
     </div>
@@ -40,19 +27,14 @@
 
   <div class="q-pa-none q-ma-none">
     <template v-if="currentWindowOnly">
-      <div
-        v-for="tab in tabsForCurrentWindow"
-        class="q-my-none tabBorder q-mb-xs"
-        :style="cardStyle(tab)"
-      >
+      <div v-for="tab in tabsForCurrentWindow" class="q-my-none tabBorder q-mb-xs" :style="cardStyle(tab)">
         <OpenTabCard2
           v-on:selectionChanged="tabSelectionChanged"
           v-on:addedToTabset="tabAddedToTabset"
           v-on:hasSelectable="hasSelectable"
           :chromeTab="tab"
           :windowId="useWindowsStore().currentChromeWindow?.id || 0"
-          :useSelection="useSelection"
-        />
+          :useSelection="useSelection" />
       </div>
     </template>
 
@@ -64,20 +46,17 @@
         expand-separator
         icon="o_grid_view"
         :label="w['name' as keyof object]"
-        :caption="w['tabsCount' as keyof object] + ' tab(s)'"
-      >
+        :caption="w['tabsCount' as keyof object] + ' tab(s)'">
         <div
           class="q-my-none tabBorder q-mb-xs"
-          v-for="tab in filteredTabs(w['tabs' as keyof object] as chrome.tabs.Tab[])"
-        >
+          v-for="tab in filteredTabs(w['tabs' as keyof object] as chrome.tabs.Tab[])">
           <OpenTabCard2
             v-on:selectionChanged="tabSelectionChanged"
             v-on:addedToTabset="tabAddedToTabset"
             v-on:hasSelectable="hasSelectable"
             :chromeTab="tab"
             :windowId="w['id' as keyof object]"
-            :useSelection="useSelection"
-          />
+            :useSelection="useSelection" />
         </div>
       </q-expansion-item>
     </template>
@@ -117,13 +96,9 @@ onMounted(async () => {
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
 
-chrome.windows.onCreated.addListener(
-  async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()),
-)
+chrome.windows.onCreated.addListener(async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()))
 chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await calcWindowRows()))
-chrome.tabs.onUpdated.addListener(
-  async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()),
-)
+chrome.tabs.onUpdated.addListener(async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
 chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
 chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
 
@@ -148,10 +123,7 @@ watchEffect(() => {
     tabs.value = _.filter(
       tabs.value,
       (t: chrome.tabs.Tab) =>
-        !!(
-          (t.url && t.url?.indexOf(filterTerm) >= 0) ||
-          (t.title && t.title.toLowerCase()?.indexOf(filterTerm) >= 0)
-        ),
+        !!((t.url && t.url?.indexOf(filterTerm) >= 0) || (t.title && t.title.toLowerCase()?.indexOf(filterTerm) >= 0)),
     )
   }
 })
@@ -220,8 +192,7 @@ const cardStyle = (tab: chrome.tabs.Tab) => {
 }
 
 const hasDuplicate = (tab: chrome.tabs.Tab) => {
-  const allCurrentTabs: chrome.tabs.Tab[] = (useWindowsStore().currentChromeWindow?.tabs ||
-    []) as chrome.tabs.Tab[]
+  const allCurrentTabs: chrome.tabs.Tab[] = (useWindowsStore().currentChromeWindow?.tabs || []) as chrome.tabs.Tab[]
   return (
     _.filter(allCurrentTabs, (t: chrome.tabs.Tab) => {
       if (tab.url && t.url === tab.url) {
