@@ -13,28 +13,15 @@
 
     <!-- place QPageSticky at end of page -->
     <q-page-sticky expand position="top" class="darkInDarkMode brightInBrightMode">
-      <FirstToolbarHelper2 title="Open Tabs">
-        <template v-slot:iconsRight>
-          <SidePanelToolbarTabNavigationHelper />
-
-          <SidePanelToolbarButton
-            icon="close"
-            tooltip="Close this view"
-            @click="useUiStore().sidePanelSetActiveView(SidePanelViews.MAIN)" />
-        </template>
-      </FirstToolbarHelper2>
+      <ViewToolbarHelper title="Open Tabs" />
     </q-page-sticky>
   </q-page>
 </template>
 
 <script lang="ts" setup>
-import FirstToolbarHelper2 from 'pages/sidepanel/helper/FirstToolbarHelper2.vue'
-import { SidePanelViews } from 'src/app/models/SidePanelViews'
-import SidePanelToolbarButton from 'src/core/components/SidePanelToolbarButton.vue'
+import ViewToolbarHelper from 'pages/sidepanel/helper/ViewToolbarHelper.vue'
 import Analytics from 'src/core/utils/google-analytics'
 import SidePanelOpenTabsListViewer from 'src/opentabs/pages/SidePanelOpenTabsListViewer.vue'
-import SidePanelToolbarTabNavigationHelper from 'src/opentabs/pages/SidePanelToolbarTabNavigationHelper.vue'
-import { useUiStore } from 'src/ui/stores/uiStore'
 import { onMounted } from 'vue'
 
 onMounted(() => {
