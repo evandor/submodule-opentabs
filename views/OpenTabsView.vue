@@ -65,7 +65,7 @@
               v-on:addedToTabset="tabAddedToTabset"
               v-on:hasSelectable="hasSelectable"
               :chromeTab="tab"
-              :windowId="useWindowsStore().currentChromeWindow?.id || 0"
+              :windowId="useWindowsStore().currentBrowserWindow?.id || 0"
               :useSelection="useSelection" />
           </div>
         </vue-draggable-next>

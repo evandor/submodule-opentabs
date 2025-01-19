@@ -33,7 +33,7 @@
           v-on:addedToTabset="tabAddedToTabset"
           v-on:hasSelectable="hasSelectable"
           :chromeTab="tab"
-          :windowId="useWindowsStore().currentChromeWindow?.id || 0"
+          :windowId="useWindowsStore().currentBrowserWindow?.id || 0"
           :useSelection="useSelection" />
       </div>
     </template>
@@ -157,11 +157,14 @@ const resetFilter = () => {
 }
 
 const calcWindowRows = async () => {
-  await useWindowsStore().refreshCurrentWindows()
+  await useWindowsStore().refreshCurrentWindows('calcWindowRows')
   const result = _.map(
-    useWindowsStore().currentChromeWindows as chrome.windows.Window[],
+    useWindowsStore().currentBrowserWindows as chrome.windows.Window[],
     (cw: chrome.windows.Window) => {
-      const windowFromStore: Window | undefined = useWindowsStore().windowForId(cw.id || -2)
+      const windowFromStore: Window | undefined = useWindowsStore().windowForId(
+        cw.id || -2,
+        'SidePanelOpenTabsListViewer',
+      )
 
       return {
         id: cw.id,
@@ -192,7 +195,7 @@ const cardStyle = (tab: chrome.tabs.Tab) => {
 }
 
 const hasDuplicate = (tab: chrome.tabs.Tab) => {
-  const allCurrentTabs: chrome.tabs.Tab[] = (useWindowsStore().currentChromeWindow?.tabs || []) as chrome.tabs.Tab[]
+  const allCurrentTabs: chrome.tabs.Tab[] = (useWindowsStore().currentBrowserWindow?.tabs || []) as chrome.tabs.Tab[]
   return (
     _.filter(allCurrentTabs, (t: chrome.tabs.Tab) => {
       if (tab.url && t.url === tab.url) {
