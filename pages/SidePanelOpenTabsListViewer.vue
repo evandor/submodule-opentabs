@@ -187,7 +187,7 @@ const cardStyle = (tab: chrome.tabs.Tab) => {
     background = 'background: radial-gradient(circle, #FFFFFF 0%, #FFECB3 100%)'
   }
   if (useTabsetService().urlExistsInCurrentTabset(tab.url || '')) {
-    background = 'background: #efefef'
+    //background = 'background: #efefef'
   } else {
     // emits('hasSelectable', true)
   }
