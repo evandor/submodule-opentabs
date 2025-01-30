@@ -67,6 +67,7 @@
 import SidePanelTabsetsSelectorWidget from 'components/widgets/SidePanelTabsetsSelectorWidget.vue'
 import _ from 'lodash'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
+import { useUtils } from 'src/core/services/Utils'
 import Analytics from 'src/core/utils/google-analytics'
 import { TabsSortingCommand } from 'src/opentabs/commands/TabsSortingCommand'
 import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
@@ -76,6 +77,8 @@ import { useUiStore } from 'src/ui/stores/uiStore'
 import { Window } from 'src/windows/models/Window'
 import { useWindowsStore } from 'src/windows/stores/windowsStore'
 import { onMounted, ref, watchEffect } from 'vue'
+
+const { addListenerOnce } = useUtils()
 
 const useSelection = ref(false)
 const userCanSelect = ref(false)
@@ -98,7 +101,8 @@ onMounted(async () => {
 
 chrome.windows.onCreated.addListener(async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()))
 chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await calcWindowRows()))
-chrome.tabs.onUpdated.addListener(async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
+//chrome.tabs.onUpdated.addListener(async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
+addListenerOnce(chrome.tabs.onUpdated, async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
 chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
 chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
 
@@ -112,7 +116,7 @@ const filteredTabs = (tabs: chrome.tabs.Tab[]) => {
 }
 
 watchEffect(() => {
-  console.log('*********', useTabsStore2().browserTabs)
+  //console.log('*********', useTabsStore2().browserTabs)
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
 
