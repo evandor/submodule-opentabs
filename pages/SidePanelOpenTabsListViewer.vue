@@ -2,13 +2,19 @@
   <!-- SidePanelOpenTabsListViewer -->
 
   <div class="row q-mt-xs">
-    <div class="col-6 q-mt-sm">
-      <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true" />
+    <div class="col-6 q-my-sm">
+      <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true" @tabset-switched="updateTabs()" />
     </div>
-    <div class="col-6 text-right">
+    <div class="col-6 text-right text-grey-8">
       <template v-if="useWindowsStore().allWindows.size > 1">
-        Current Window only
-        <q-checkbox v-model="currentWindowOnly" />
+        <q-checkbox
+          v-model="currentWindowOnly"
+          label="this window only"
+          left-label
+          dense
+          size="xs"
+          color="text-grey-8"
+          class="q-mt-sm" />
       </template>
     </div>
     <div class="col-11 q-mb-xs">
@@ -27,7 +33,11 @@
 
   <div class="q-pa-none q-ma-none">
     <template v-if="currentWindowOnly">
-      <div v-for="tab in tabsForCurrentWindow" class="q-my-none tabBorder q-mb-xs" :style="cardStyle(tab)">
+      <div
+        v-for="tab in tabsForCurrentWindow"
+        class="q-my-none tabBorder q-mb-xs"
+        :style="cardStyle(tab)"
+        :key="tab.id || tab.url || new Date().getTime()">
         <OpenTabCard2
           v-on:selectionChanged="tabSelectionChanged"
           v-on:addedToTabset="tabAddedToTabset"
@@ -44,8 +54,9 @@
         default-opened
         dense-toggle
         expand-separator
+        header-class="bg-grey-5"
         icon="o_grid_view"
-        :label="w['name' as keyof object]"
+        :label="'Window ' + w['name' as keyof object]"
         :caption="w['tabsCount' as keyof object] + ' tab(s)'">
         <div
           class="q-my-none tabBorder q-mb-xs"
@@ -119,6 +130,11 @@ watchEffect(() => {
   //console.log('*********', useTabsStore2().browserTabs)
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
+
+const updateTabs = () => {
+  tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
+  console.log('updating', tabsForCurrentWindow.value)
+}
 
 watchEffect(() => {
   tabs.value = useTabsStore2().browserTabs

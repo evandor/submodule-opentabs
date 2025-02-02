@@ -26,22 +26,21 @@
     <div class="col-1 q-mt-xs text-right">
       <q-icon v-if="existsInTabset" name="link" :color="existsInCurrentTabset ? 'green' : 'warning'">
         <q-tooltip class="tooltip-small" v-if="existsInCurrentTabset"
-          >Already contained in the current tabset</q-tooltip
-        >
+          >Already contained in the current tabset {{ useTabsetsStore().currentTabsetName }}
+        </q-tooltip>
         <q-tooltip class="tooltip-small" v-else>Already contained in a tabset</q-tooltip>
       </q-icon>
     </div>
     <div class="col q-mt-xs text-right">
       <template v-if="!props.useSelection && showIcons">
         <q-icon
-          name="o_add_circle"
+          :name="alreadyInCurrentTabset ? 'o_do_not_disturb_on' : 'o_add_circle'"
           :color="alreadyInCurrentTabset ? 'grey' : 'warning'"
-          class="q-mr-xs"
-          :class="alreadyInCurrentTabset ? '' : 'cursor-pointer'"
+          class="q-mr-xs cursor-pointer"
           size="xs"
-          @click="addToCurrentTabset">
+          @click="addOrRemoveFromTabset(chromeTab.url)">
           <q-tooltip class="tooltip" v-if="alreadyInCurrentTabset"
-            >This tab has already been added to
+            >Remove this tab from collection
             {{ useTabsetsStore().currentTabsetName }}
           </q-tooltip>
           <q-tooltip class="tooltip" v-else
@@ -65,10 +64,11 @@ import { useFeaturesStore } from 'src/features/stores/featuresStore'
 import NavigationService from 'src/services/NavigationService'
 import TabService from 'src/services/TabService'
 import { CreateTabFromOpenTabsCommand } from 'src/tabsets/commands/CreateTabFromOpenTabs'
+import { DeleteTabCommand } from 'src/tabsets/commands/DeleteTabCommand'
 import { Tab } from 'src/tabsets/models/Tab'
 import { useTabsetService } from 'src/tabsets/services/TabsetService2'
 import TabFaviconWidget from 'src/tabsets/widgets/TabFaviconWidget.vue'
-import { onMounted, PropType, ref } from 'vue'
+import { PropType, ref, watchEffect } from 'vue'
 import { useTabsetsStore } from '../../tabsets/stores/tabsetsStore'
 
 const props = defineProps({
@@ -84,23 +84,37 @@ const alreadyInCurrentTabset = ref(false)
 const existsInTabset = ref(false)
 const existsInCurrentTabset = ref(false)
 
-onMounted(() => {
+const closeTab = (tab: chrome.tabs.Tab) => {
+  NavigationService.closeChromeTab(tab)
+}
+
+const addOrRemoveFromTabset = (url: string | undefined) => {
+  if (alreadyInCurrentTabset.value && url) {
+    const currentTs = useTabsetsStore().getCurrentTabset
+    if (!currentTs) {
+      return
+    }
+    const tab: Tab[] | undefined = currentTs.tabs.filter((t: Tab) => t.url === url)
+    if (tab && tab.length > 0) {
+      useCommandExecutor()
+        .executeFromUi(new DeleteTabCommand(tab[0]!, currentTs))
+        .then(() => (alreadyInCurrentTabset.value = false))
+      //.then(() => emits('addedToTabset', { tabId: props.chromeTab.id, tabUrl: props.chromeTab.url }))
+    }
+  } else {
+    useCommandExecutor()
+      .executeFromUi(new CreateTabFromOpenTabsCommand(props.chromeTab as chrome.tabs.Tab, 0))
+      .then(() => (alreadyInCurrentTabset.value = true))
+      .then(() => emits('addedToTabset', { tabId: props.chromeTab.id, tabUrl: props.chromeTab.url }))
+  }
+}
+
+watchEffect(() => {
   if (props.chromeTab?.url) {
     existsInTabset.value = useTabsetService().urlExistsInATabset(props.chromeTab.url)
     existsInCurrentTabset.value = useTabsetService().urlExistsInCurrentTabset(props.chromeTab.url)
   }
 })
-
-const closeTab = (tab: chrome.tabs.Tab) => {
-  NavigationService.closeChromeTab(tab)
-}
-
-const addToCurrentTabset = () => {
-  useCommandExecutor()
-    .executeFromUi(new CreateTabFromOpenTabsCommand(props.chromeTab as chrome.tabs.Tab, 0))
-    .then(() => (alreadyInCurrentTabset.value = true))
-    .then(() => emits('addedToTabset', { tabId: props.chromeTab.id, tabUrl: props.chromeTab.url }))
-}
 
 const selectionChanged = (val: any) => {
   emits('selectionChanged', { tabId: props.chromeTab.id, selected: val })
