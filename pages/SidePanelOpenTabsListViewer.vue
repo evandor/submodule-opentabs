@@ -99,12 +99,12 @@ onMounted(async () => {
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
 })
 
+// TODO use Windows Store
 chrome.windows.onCreated.addListener(async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()))
 chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await calcWindowRows()))
-//chrome.tabs.onUpdated.addListener(async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
-addListenerOnce(chrome.tabs.onUpdated, async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
-chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
-chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
+// addListenerOnce(chrome.tabs.onUpdated, async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
+// chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
+// chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
 
 const filteredTabs = (tabs: chrome.tabs.Tab[]) => {
   const res = _.filter(
