@@ -3,7 +3,10 @@
 
   <div class="row q-mt-xs">
     <div class="col-6 q-my-sm">
-      <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true" @tabset-switched="updateTabs()" />
+      <SidePanelTabsetsSelectorWidget
+        v-if="useTabsetsStore().tabsets.size > 0"
+        :use-as-tabsets-switcher="true"
+        @tabset-switched="updateTabs()" />
     </div>
     <div class="col-6 text-right text-grey-8">
       <template v-if="useWindowsStore().allWindows.size > 1">
@@ -30,6 +33,24 @@
       </q-icon>
     </div>
   </div>
+  <div class="row">
+    <div class="col-6 q-ml-sm">
+      <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">
+        <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>
+      </q-icon>
+    </div>
+    <div class="col text-right" style="min-height: 32px">
+      <q-btn
+        v-if="tabSelection.size > 0"
+        @click.stop="createCollection()"
+        size="sm"
+        color="primary"
+        outline
+        class="q-mr-md"
+        >Create Collection
+      </q-btn>
+    </div>
+  </div>
 
   <div class="q-pa-none q-ma-none">
     <template v-if="currentWindowOnly">
@@ -42,6 +63,7 @@
           v-on:selectionChanged="tabSelectionChanged"
           v-on:addedToTabset="tabAddedToTabset"
           v-on:hasSelectable="hasSelectable"
+          :selected="isSelected(tab)"
           :chromeTab="tab"
           :windowId="useWindowsStore().currentBrowserWindow?.id || 0"
           :useSelection="useSelection" />
@@ -77,21 +99,23 @@
 <script setup lang="ts">
 import SidePanelTabsetsSelectorWidget from 'components/widgets/SidePanelTabsetsSelectorWidget.vue'
 import _ from 'lodash'
+import { date } from 'quasar'
+import { SidePanelViews } from 'src/app/models/SidePanelViews'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
-import { useUtils } from 'src/core/services/Utils'
 import Analytics from 'src/core/utils/google-analytics'
 import { TabsSortingCommand } from 'src/opentabs/commands/TabsSortingCommand'
 import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
+import { CreateTabsetCommand } from 'src/tabsets/commands/CreateTabsetCommand'
 import { useTabsetService } from 'src/tabsets/services/TabsetService2'
+import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
 import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
 import { useUiStore } from 'src/ui/stores/uiStore'
 import { Window } from 'src/windows/models/Window'
 import { useWindowsStore } from 'src/windows/stores/windowsStore'
 import { onMounted, ref, watchEffect } from 'vue'
+import { useRouter } from 'vue-router'
 
-const { addListenerOnce } = useUtils()
-
-const useSelection = ref(false)
+const useSelection = ref(true)
 const userCanSelect = ref(false)
 const currentWindowOnly = ref(true)
 const tabsForCurrentWindow = ref<chrome.tabs.Tab[]>([])
@@ -103,6 +127,8 @@ const filterRef = ref(null)
 const filteredTabsCount = ref(0)
 const rows = ref<object[]>([])
 const sortByUrl = ref(false)
+
+const router = useRouter()
 
 onMounted(async () => {
   Analytics.firePageViewEvent('SidePanelOpenTabsListViewer', document.location.href)
@@ -155,10 +181,11 @@ watchEffect(() => {
 const tabSelectionChanged = (a: any) => {
   const { tabId, selected } = a
   if (selected) {
-    tabSelection.value.add(tabId)
+    tabSelection.value.add('' + tabId)
   } else {
-    tabSelection.value.delete(tabId)
+    tabSelection.value.delete('' + tabId)
   }
+  // console.log('tabsetlection', tabSelection.value)
 }
 
 const tabAddedToTabset = (a: any) => {
@@ -241,6 +268,42 @@ const filterHint = () => {
 const toggleSorting = () => {
   sortByUrl.value = !sortByUrl.value
   useCommandExecutor().executeFromUi(new TabsSortingCommand(sortByUrl.value))
+}
+
+const invertSelection = () => {
+  const oldSelection = tabSelection.value
+  //console.log('inverting', currentWindowOnly.value)
+  if (currentWindowOnly.value) {
+    tabsForCurrentWindow.value.forEach((t: chrome.tabs.Tab) => {
+      //console.log('checking', t.id)
+      if (t.id) {
+        oldSelection.has('' + t.id) ? tabSelection.value.delete('' + t.id) : tabSelection.value.add('' + t.id)
+      }
+    })
+  }
+}
+
+const isSelected = (tab: chrome.tabs.Tab) => tabSelection.value.has('' + tab.id)
+
+const createCollection = () => {
+  const tabsToUse: chrome.tabs.Tab[] = filteredTabs(useTabsStore2().browserTabs).filter((t: chrome.tabs.Tab) => {
+    return !!(t.id && tabSelection.value.has('' + t.id))
+  })
+  useCommandExecutor()
+    .executeFromUi(new CreateTabsetCommand('Collection ' + date.formatDate(new Date(), 'DD.MM.YYYY'), tabsToUse))
+    .then((res: any) => {
+      useUiStore().sidePanelSetActiveView(SidePanelViews.MAIN)
+      router.push('/sidepanel?first=true')
+    })
+}
+
+const toggleSelectionIcon = () => {
+  if (tabSelection.value.size === 0) {
+    return 'o_check_box'
+  } else if (tabSelection.value.size === filteredTabs(useTabsStore2().browserTabs).length) {
+    return 'o_check_box_outline_blank'
+  }
+  return 'o_published_with_changes'
 }
 </script>
 

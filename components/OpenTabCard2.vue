@@ -2,8 +2,7 @@
   <div class="row q-ma-none q-pa-none" @mouseenter="showIcons = true" @mouseleave="showIcons = false">
     <div class="col-2 q-mt-xs" style="text-align: center">
       <q-checkbox
-        v-if="showSelectIcon(chromeTab)"
-        v-model="chromeTab.selected"
+        v-model="props.selected"
         size="30px"
         checked-icon="task_alt"
         @update:model-value="(val) => selectionChanged(val)"
@@ -32,7 +31,7 @@
       </q-icon>
     </div>
     <div class="col q-mt-xs text-right">
-      <template v-if="!props.useSelection && showIcons">
+      <template v-if="showIcons">
         <q-icon
           :name="alreadyInCurrentTabset ? 'o_do_not_disturb_on' : 'o_add_circle'"
           :color="alreadyInCurrentTabset ? 'grey' : 'warning'"
@@ -75,6 +74,7 @@ const props = defineProps({
   chromeTab: { type: Object as PropType<chrome.tabs.Tab>, required: true },
   windowId: { type: Number, required: true },
   useSelection: { type: Boolean, default: false },
+  selected: { type: Boolean, default: false },
 })
 
 const emits = defineEmits(['selectionChanged', 'addedToTabset', 'hasSelectable'])
