@@ -20,25 +20,26 @@
           class="q-mt-sm" />
       </template>
     </div>
-    <div class="col-11 q-mb-xs">
+    <div class="col-2 q-ml-sm q-mt-sm">
+      <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">
+        <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>
+      </q-icon>
+    </div>
+    <div class="col-8 q-ma-none q-pa-none">
       <q-input dense autofocus ref="filterRef" filled :hint="filterHint()" v-model="filter" label="Filter Tabs">
         <template v-slot:append>
           <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
         </template>
       </q-input>
     </div>
-    <div class="col text-right">
+    <div class="col text-right q-mt-xs q-mr-sm">
       <q-icon :name="sortByUrl ? 'undo' : 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">
         <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>
       </q-icon>
     </div>
   </div>
   <div class="row">
-    <div class="col-6 q-ml-sm">
-      <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">
-        <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>
-      </q-icon>
-    </div>
+    <div class="col-6 q-ml-sm"></div>
     <div class="col text-right" style="min-height: 32px">
       <q-btn
         v-if="tabSelection.size > 0"
@@ -277,7 +278,11 @@ const invertSelection = () => {
     tabsForCurrentWindow.value.forEach((t: chrome.tabs.Tab) => {
       //console.log('checking', t.id)
       if (t.id) {
-        oldSelection.has('' + t.id) ? tabSelection.value.delete('' + t.id) : tabSelection.value.add('' + t.id)
+        if (oldSelection.has('' + t.id)) {
+          tabSelection.value.delete('' + t.id)
+        } else {
+          tabSelection.value.add('' + t.id)
+        }
       }
     })
   }

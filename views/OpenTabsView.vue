@@ -11,7 +11,7 @@
         <!--                  hint="Tabs with grey background are already contained in the current tabset."/>-->
 
         <div
-          v-if="useTabsetsStore().currentTabsetId && tabs.length > 1 && userCanSelect"
+          v-if="currentTabsetId && tabs.length > 1 && userCanSelect"
           class="q-ma-none"
           style="border: 1px dotted grey; border-radius: 3px">
           <div class="row">
@@ -89,12 +89,17 @@ import { VueDraggableNext } from 'vue-draggable-next'
 const useSelection = ref(false)
 const invert = ref(false)
 const userCanSelect = ref(false)
+const currentTabsetId = ref<string | undefined>(undefined)
 
 const tabSelection = ref<Set<string>>(new Set<string>())
 const tabs = ref<chrome.tabs.Tab[]>([])
 
 onMounted(() => {
   Analytics.firePageViewEvent('OpenTabsView', document.location.href)
+})
+
+watchEffect(async () => {
+  currentTabsetId.value = await useTabsetsStore().getCurrentTabsetId()
 })
 
 watchEffect(() => {
