@@ -19,9 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-import ViewToolbarHelper from 'pages/sidepanel/helper/ViewToolbarHelper.vue'
 import Analytics from 'src/core/utils/google-analytics'
 import SidePanelOpenTabsListViewer from 'src/opentabs/pages/SidePanelOpenTabsListViewer.vue'
+import ViewToolbarHelper from 'src/pages/sidepanel/helper/ViewToolbarHelper.vue'
 import { onMounted } from 'vue'
 
 onMounted(() => {
