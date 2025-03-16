@@ -20,27 +20,33 @@
       track-color="grey-3"
       class="q-ml-xs">
     </q-circular-progress>
-    <q-tooltip class="tooltip">Open Tabs: {{ useTabsStore2().browserTabs.length }} - click to manage</q-tooltip>
+    <q-tooltip class="tooltip-small" anchor="center right" self="center left"
+      >Open Tabs: {{ useTabsStore2().browserTabs.length }} - click to manage</q-tooltip
+    >
   </span>
   <q-menu :offset="[0, 15]">
-    <q-list style="min-width: 200px">
-      <q-item v-if="!props.inSidePanel" clickable v-close-popup @click="showOpenTabs">
-        <q-item-section>Show open tabs</q-item-section>
-      </q-item>
+    <q-list dense style="min-width: 200px">
+      <!--      <q-item v-if="!props.inSidePanel" clickable v-close-popup @click="showOpenTabs">-->
+      <!--        <q-item-section>Show open tabs</q-item-section>-->
+      <!--      </q-item>-->
       <q-separator />
-      <q-item disable> Close some tabs: </q-item>
+      <q-item disable>Clean up tabs: </q-item>
       <q-item
         :disable="useTabsetsStore().tabsets?.size === 0 || trackedTabsCount === 0"
         clickable
         v-close-popup
         @click="TabsetService.closeTrackedTabs()">
-        <q-item-section>&bull; Close all tracked tabs ({{ trackedTabsCount }})</q-item-section>
+        <q-item-section>&bull; Close {{ trackedTabsCount }} tracked tabs</q-item-section>
       </q-item>
       <!--      <q-item clickable v-close-popup @click="TabsetService.closeDuplictedOpenTabs()">-->
       <!--        <q-item-section>&bull; Close duplicated open tabs</q-item-section>-->
       <!--      </q-item>-->
-      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.BACKUP)" clickable v-close-popup @click="backupAndClose">
-        <q-item-section>&bull; Backup and close current tabs...</q-item-section>
+      <q-item
+        v-if="useFeaturesStore().hasFeature(FeatureIdent.BACKUP) && useTabsStore2().browserTabs.length > 1"
+        clickable
+        v-close-popup
+        @click="backupAndClose">
+        <q-item-section>&bull; Move all to Backup...</q-item-section>
       </q-item>
       <q-item
         :disable="useTabsStore2().browserTabs.length <= 1"
@@ -49,8 +55,8 @@
         @click="TabsetService.closeAllTabs()">
         <q-item-section>&bull; Close all other tabs ({{ useTabsStore2().browserTabs.length - 1 }})</q-item-section>
       </q-item>
-      <q-separator />
-      <q-item disable v-if="showSpecialTabsets()"> Use special tabsets: </q-item>
+      <!--      <q-separator />-->
+      <!--      <q-item disable v-if="showSpecialTabsets()"> Use special tabsets: </q-item>-->
       <!--      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && existingSession"-->
       <!--              clickable v-close-popup-->
       <!--              @click="replaceSession">-->
@@ -118,6 +124,7 @@ watchEffect(() => {
 watch(
   () => useTabsStore2().browserTabs.length,
   (after: number, before: number) => {
+    console.log('---', after, before)
     if (inBexMode()) {
       TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
     }
@@ -127,6 +134,7 @@ watch(
 watch(
   () => useTabsetsStore().getCurrentTabs.length,
   (after: number, before: number) => {
+    console.log('---', after, before)
     if (inBexMode()) {
       TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
     }
@@ -138,7 +146,7 @@ watch(
 //   TabsetService.trackedTabsCount().then((res) => trackedTabsCount.value = res)
 // })
 
-//watchEffect(() => TabsetService.trackedTabsCount().then((res) => trackedTabsCount.value = res))
+// watchEffect(() => TabsetService.trackedTabsCount().then((res) => trackedTabsCount.value = res))
 
 const showThresholdBar = () => useTabsStore2().browserTabs.length >= settingsStore.thresholds['min' as keyof object]
 
