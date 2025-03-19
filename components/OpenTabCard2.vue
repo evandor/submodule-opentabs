@@ -2,7 +2,7 @@
   <div class="row q-ma-none q-pa-none" @mouseenter="showIcons = true" @mouseleave="showIcons = false">
     <div class="col-2 q-mt-xs" style="text-align: center">
       <q-checkbox
-        v-model="props.selected"
+        v-model="selected"
         size="30px"
         checked-icon="task_alt"
         @update:model-value="(val) => selectionChanged(val)"
@@ -83,6 +83,7 @@ const showIcons = ref(false)
 const alreadyInCurrentTabset = ref(false)
 const existsInTabset = ref(false)
 const existsInCurrentTabset = ref(false)
+const selected = ref(props.selected)
 
 const closeTab = (tab: chrome.tabs.Tab) => {
   NavigationService.closeChromeTab(tab)

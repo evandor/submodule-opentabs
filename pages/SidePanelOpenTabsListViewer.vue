@@ -20,7 +20,7 @@
           class="q-mt-sm" />
       </template>
     </div>
-    <div class="col-2 q-ml-sm q-mt-sm">
+    <div class="col-1 q-ml-sm q-mt-sm">
       <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">
         <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>
       </q-icon>
@@ -59,7 +59,7 @@
         v-for="tab in tabsForCurrentWindow"
         class="q-my-none tabBorder q-mb-xs"
         :style="cardStyle(tab)"
-        :key="tab.id || tab.url || new Date().getTime()">
+        :key="(tab.id || tab.url || new Date().getTime()) + '_' + isSelected(tab)">
         <OpenTabCard2
           v-on:selectionChanged="tabSelectionChanged"
           v-on:addedToTabset="tabAddedToTabset"
@@ -116,6 +116,10 @@ import { useWindowsStore } from 'src/windows/stores/windowsStore'
 import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
+const props = defineProps<{ filterTerm: string | undefined }>()
+
+const emits = defineEmits(['tabSelectionChanged'])
+
 const useSelection = ref(true)
 const userCanSelect = ref(false)
 const currentWindowOnly = ref(true)
@@ -128,6 +132,7 @@ const filterRef = ref(null)
 const filteredTabsCount = ref(0)
 const rows = ref<object[]>([])
 const sortByUrl = ref(false)
+const searchKeyboardShortcut = ref<string | undefined>(undefined)
 
 const router = useRouter()
 
@@ -144,14 +149,24 @@ chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await 
 // chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
 // chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
 
-const filteredTabs = (tabs: chrome.tabs.Tab[]) => {
-  const res = _.filter(
-    tabs,
-    (t: chrome.tabs.Tab) => (t.title || 'unknown title').toLowerCase().indexOf(filter.value) >= 0,
-  )
+const filteredTabs = (tabs: chrome.tabs.Tab[]): chrome.tabs.Tab[] => {
+  function checkMatch(val: string | undefined): boolean {
+    return !props.filterTerm || (val !== undefined && val.toLowerCase().indexOf(props.filterTerm.toLowerCase()) >= 0)
+  }
+
+  const res = tabs.filter((t: chrome.tabs.Tab) => {
+    if (props.filterTerm) {
+      return checkMatch(t.title) || checkMatch(t.url)
+    }
+    return true
+  })
   filteredTabsCount.value = res.length
   return res
 }
+
+watchEffect(() => {
+  tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
+})
 
 watchEffect(() => {
   //console.log('*********', useTabsStore2().browserTabs)
@@ -186,7 +201,8 @@ const tabSelectionChanged = (a: any) => {
   } else {
     tabSelection.value.delete('' + tabId)
   }
-  // console.log('tabsetlection', tabSelection.value)
+  emits('tabSelectionChanged', tabSelection.value)
+  //console.log('tabsetlection', tabSelection.value)
 }
 
 const tabAddedToTabset = (a: any) => {
@@ -287,6 +303,8 @@ const invertSelection = () => {
     })
   }
 }
+
+defineExpose({ invertSelection })
 
 const isSelected = (tab: chrome.tabs.Tab) => tabSelection.value.has('' + tab.id)
 
