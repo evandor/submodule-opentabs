@@ -30,7 +30,10 @@
       <!--        <q-item-section>Show open tabs</q-item-section>-->
       <!--      </q-item>-->
       <q-separator />
-      <q-item disable>Clean up tabs: </q-item>
+      <q-item disable>Clean up tabs:</q-item>
+      <q-item clickable :disable="ignoredTabsCount === 0" v-close-popup @click="TabsetService.closeIgnoredTabs()">
+        <q-item-section>&bull; Close {{ ignoredTabsCount }} ignored tabs</q-item-section>
+      </q-item>
       <q-item
         :disable="useTabsetsStore().tabsets?.size === 0 || trackedTabsCount === 0"
         clickable
@@ -53,25 +56,8 @@
         clickable
         v-close-popup
         @click="TabsetService.closeAllTabs()">
-        <q-item-section>&bull; Close all other tabs ({{ useTabsStore2().browserTabs.length - 1 }})</q-item-section>
+        <q-item-section>&bull; Close all tabs ({{ useTabsStore2().browserTabs.length - 1 }})</q-item-section>
       </q-item>
-      <!--      <q-separator />-->
-      <!--      <q-item disable v-if="showSpecialTabsets()"> Use special tabsets: </q-item>-->
-      <!--      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && existingSession"-->
-      <!--              clickable v-close-popup-->
-      <!--              @click="replaceSession">-->
-      <!--        <q-item-section>&bull; Replace existing Session...</q-item-section>-->
-      <!--      </q-item>-->
-      <!--      <q-item v-else-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !existingSession"-->
-      <!--              clickable v-close-popup-->
-      <!--              @click="startSession">-->
-      <!--        <q-item-section>&bull; Start a new Session...</q-item-section>-->
-      <!--      </q-item>-->
-      <!--      <q-separator v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !props.inSidePanel"/>-->
-      <!--      <q-item v-if="useFeaturesStore().hasFeature(FeatureIdent.SESSIONS) && !props.inSidePanel"-->
-      <!--              clickable v-close-popup @click="router.push('/settings')">-->
-      <!--        <q-item-section>Change Settings</q-item-section>-->
-      <!--      </q-item>-->
     </q-list>
   </q-menu>
 </template>
@@ -88,7 +74,6 @@ import { Tabset, TabsetType } from 'src/tabsets/models/Tabset'
 import TabsetService from 'src/tabsets/services/TabsetService'
 import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
 import { useTabsStore2 } from 'src/tabsets/stores/tabsStore2'
-import { DrawerTabs, useUiStore } from 'src/ui/stores/uiStore'
 import { ref, watch, watchEffect } from 'vue'
 
 const settingsStore = useSettingsStore()
@@ -97,6 +82,7 @@ const $q = useQuasar()
 const openTabsCountRatio = ref(0)
 const openTabsCountRatio2 = ref(0)
 const trackedTabsCount = ref(0)
+const ignoredTabsCount = ref(0)
 const existingSession = ref(false)
 
 const { inBexMode } = useUtils()
@@ -106,9 +92,8 @@ const props = defineProps({
   inSidePanel: { type: Boolean, default: false },
 })
 
-if (!inBexMode()) {
-  TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
-}
+TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
+TabsetService.trackedIgnoredCount().then((res) => (ignoredTabsCount.value = res))
 
 watchEffect(() => {
   openTabsCountRatio.value = Math.min(
@@ -124,9 +109,9 @@ watchEffect(() => {
 watch(
   () => useTabsStore2().browserTabs.length,
   (after: number, before: number) => {
-    console.log('---', after, before)
     if (inBexMode()) {
       TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
+      TabsetService.trackedIgnoredCount().then((res) => (ignoredTabsCount.value = res))
     }
   },
 )
@@ -137,33 +122,19 @@ watch(
     console.log('---', after, before)
     if (inBexMode()) {
       TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
+      TabsetService.trackedIgnoredCount().then((res) => (ignoredTabsCount.value = res))
     }
   },
 )
 
-// watch( useEventStore().events, (val: any) => {
-//   console.log("event received", val)
-//   TabsetService.trackedTabsCount().then((res) => trackedTabsCount.value = res)
-// })
-
-// watchEffect(() => TabsetService.trackedTabsCount().then((res) => trackedTabsCount.value = res))
-
 const showThresholdBar = () => useTabsStore2().browserTabs.length >= settingsStore.thresholds['min' as keyof object]
-
 const thresholdStyle = () => 'color: hsl(' + (120 - Math.round(120 * openTabsCountRatio.value)) + ' 80% 50%)'
-
 const thresholdLabel = () => useTabsStore2().browserTabs.length + ' open tabs'
-
-const showOpenTabs = () => useUiStore().rightDrawerSetActiveTab(DrawerTabs.UNASSIGNED_TABS)
 
 watchEffect(() => {
   existingSession.value =
     _.filter([...useTabsetsStore().tabsets.values()], (ts: Tabset) => ts.type === TabsetType.SESSION).length > 0
 })
 
-// const startSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: false}})
-// const replaceSession = () => $q.dialog({component: NewSessionDialog, componentProps: {replaceSession: true}})
 const backupAndClose = () => $q.dialog({ component: BackupAndCloseDialog })
-
-const showSpecialTabsets = () => useFeaturesStore().hasFeature(FeatureIdent.SESSIONS)
 </script>
