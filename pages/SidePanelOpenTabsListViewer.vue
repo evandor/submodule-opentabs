@@ -20,23 +20,23 @@
           class="q-mt-sm" />
       </template>
     </div>
-    <div class="col-1 q-ml-sm q-mt-sm">
-      <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">
-        <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>
-      </q-icon>
-    </div>
-    <div class="col-8 q-ma-none q-pa-none">
-      <q-input dense autofocus ref="filterRef" filled :hint="filterHint()" v-model="filter" label="Filter Tabs">
-        <template v-slot:append>
-          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />
-        </template>
-      </q-input>
-    </div>
-    <div class="col text-right q-mt-xs q-mr-sm">
-      <q-icon :name="sortByUrl ? 'undo' : 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">
-        <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>
-      </q-icon>
-    </div>
+    <!--    <div class="col-1 q-ml-sm q-mt-sm">-->
+    <!--      <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">-->
+    <!--        <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>-->
+    <!--      </q-icon>-->
+    <!--    </div>-->
+    <!--    <div class="col-8 q-ma-none q-pa-none">-->
+    <!--      <q-input dense autofocus ref="filterRef" filled :hint="filterHint()" v-model="filter" label="Filter Tabs">-->
+    <!--        <template v-slot:append>-->
+    <!--          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />-->
+    <!--        </template>-->
+    <!--      </q-input>-->
+    <!--    </div>-->
+    <!--    <div class="col text-right q-mt-xs q-mr-sm">-->
+    <!--      <q-icon :name="sortByUrl ? 'undo' : 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">-->
+    <!--        <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>-->
+    <!--      </q-icon>-->
+    <!--    </div>-->
   </div>
   <div class="row">
     <div class="col-6 q-ml-sm"></div>
