@@ -1,12 +1,12 @@
 <template>
   <!-- SidePanelOpenTabsPage -->
-  <q-page padding style="padding-top: 84px">
+  <q-page padding style="padding-top: 86px">
     <div class="q-ma-none">
       <div class="q-ma-none">
         <div class="row q-ma-none q-pa-none">
-          <div class="col-12 q-ma-none q-pa-none q-pt-md">
+          <div class="col-12 q-ma-none q-pa-none">
             <SidePanelOpenTabsListViewer
-              ref="sidePanelOpenTabsListViewer"
+              ref="sidePanelOpenTabsListViewerRef"
               :filterTerm="filterTerm"
               @tab-selection-changed="(v) => tabSelectionChanged(v)" />
           </div>
@@ -33,13 +33,13 @@ import { onMounted, ref } from 'vue'
 
 const filterTerm = ref<string | undefined>(undefined)
 const tabSelection = ref<Set<string>>(new Set<string>())
-const sidePanelOpenTabsListViewer = ref()
+const sidePanelOpenTabsListViewerRef = ref()
 
 onMounted(() => {
   Analytics.firePageViewEvent('SidePanelOpenTabsPage', document.location.href)
 })
 
 const termChanged = (val: { term: string }) => (filterTerm.value = val.term)
-const selectionInverted = () => sidePanelOpenTabsListViewer.value!.invertSelection()
+const selectionInverted = () => sidePanelOpenTabsListViewerRef.value!.invertSelection()
 const tabSelectionChanged = (val: Set<string>) => (tabSelection.value = val)
 </script>

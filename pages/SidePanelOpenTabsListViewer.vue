@@ -2,52 +2,31 @@
   <!-- SidePanelOpenTabsListViewer -->
 
   <div class="row q-mt-xs">
-    <div class="col-6 q-my-sm">
+    <div class="col-6 q-mt-sm q-mb-md">
+      <div class="text-caption q-ml-sm">Referenced Collection:</div>
       <SidePanelTabsetsSelectorWidget
-        v-if="useTabsetsStore().tabsets.size > 0"
+        v-if="useTabsetsStore().tabsets.size > 1"
         :use-as-tabsets-switcher="true"
         @tabset-switched="updateTabs()" />
-    </div>
-    <div class="col-6 text-right text-grey-8">
+
       <template v-if="useWindowsStore().allWindows.size > 1">
         <q-checkbox
           v-model="currentWindowOnly"
           label="this window only"
-          left-label
           dense
           size="xs"
           color="text-grey-8"
-          class="q-mt-sm" />
+          class="q-mt-sm q-ml-sm text-body2" />
       </template>
     </div>
-    <!--    <div class="col-1 q-ml-sm q-mt-sm">-->
-    <!--      <q-icon :name="toggleSelectionIcon()" class="cursor-pointer" size="sm" @click.stop="invertSelection()">-->
-    <!--        <q-tooltip class="tooltip-small">Invert Selection</q-tooltip>-->
-    <!--      </q-icon>-->
-    <!--    </div>-->
-    <!--    <div class="col-8 q-ma-none q-pa-none">-->
-    <!--      <q-input dense autofocus ref="filterRef" filled :hint="filterHint()" v-model="filter" label="Filter Tabs">-->
-    <!--        <template v-slot:append>-->
-    <!--          <q-icon v-if="filter !== ''" name="clear" class="cursor-pointer" @click="resetFilter" />-->
-    <!--        </template>-->
-    <!--      </q-input>-->
-    <!--    </div>-->
-    <!--    <div class="col text-right q-mt-xs q-mr-sm">-->
-    <!--      <q-icon :name="sortByUrl ? 'undo' : 'sort'" color="primary" class="cursor-pointer" @click="toggleSorting()">-->
-    <!--        <q-tooltip class="tooltip-small">Toggle Sorting between custom and URL</q-tooltip>-->
-    <!--      </q-icon>-->
-    <!--    </div>-->
-  </div>
-  <div class="row">
-    <div class="col-6 q-ml-sm"></div>
-    <div class="col text-right" style="min-height: 32px">
+    <div class="col-6 text-right text-grey-8">
       <q-btn
         v-if="tabSelection.size > 0"
         @click.stop="createCollection()"
         size="sm"
         color="primary"
         outline
-        class="q-mr-md"
+        class="q-mt-md"
         >Create Collection
       </q-btn>
     </div>
