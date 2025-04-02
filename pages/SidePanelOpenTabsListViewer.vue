@@ -1,22 +1,20 @@
 <template>
   <!-- SidePanelOpenTabsListViewer -->
-
   <div class="row q-mt-xs">
     <div class="col-6 q-mt-sm q-mb-md">
-      <div class="text-caption q-ml-sm">Referenced Collection:</div>
-      <SidePanelTabsetsSelectorWidget
-        v-if="useTabsetsStore().tabsets.size > 1"
-        :use-as-tabsets-switcher="true"
-        @tabset-switched="updateTabs()" />
+      <template v-if="useTabsetsStore().tabsets.size > 1">
+        <div class="text-caption q-ml-sm">Referenced Collection:</div>
+        <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true" @tabset-switched="updateTabs()" />
 
-      <template v-if="useWindowsStore().allWindows.size > 1">
-        <q-checkbox
-          v-model="currentWindowOnly"
-          label="this window only"
-          dense
-          size="xs"
-          color="text-grey-8"
-          class="q-mt-sm q-ml-sm text-body2" />
+        <template v-if="useWindowsStore().allWindows.size > 1">
+          <q-checkbox
+            v-model="currentWindowOnly"
+            label="this window only"
+            dense
+            size="xs"
+            color="text-grey-8"
+            class="q-mt-sm q-ml-sm text-body2" />
+        </template>
       </template>
     </div>
     <div class="col-6 text-right text-grey-8">
@@ -83,7 +81,6 @@ import { date } from 'quasar'
 import { SidePanelViews } from 'src/app/models/SidePanelViews'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
 import Analytics from 'src/core/utils/google-analytics'
-import { TabsSortingCommand } from 'src/opentabs/commands/TabsSortingCommand'
 import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
 import { CreateTabsetCommand } from 'src/tabsets/commands/CreateTabsetCommand'
 import { useTabsetService } from 'src/tabsets/services/TabsetService2'
@@ -97,7 +94,7 @@ import { useRouter } from 'vue-router'
 
 const props = defineProps<{ filterTerm: string | undefined }>()
 
-const emits = defineEmits(['tabSelectionChanged'])
+const emits = defineEmits(['tabSelectionChanged', 'filtered-tabs'])
 
 const useSelection = ref(true)
 const userCanSelect = ref(false)
@@ -110,8 +107,6 @@ const filter = ref('')
 const filterRef = ref(null)
 const filteredTabsCount = ref(0)
 const rows = ref<object[]>([])
-const sortByUrl = ref(false)
-const searchKeyboardShortcut = ref<string | undefined>(undefined)
 
 const router = useRouter()
 
@@ -119,14 +114,12 @@ onMounted(async () => {
   Analytics.firePageViewEvent('SidePanelOpenTabsListViewer', document.location.href)
   rows.value = await calcWindowRows()
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
+  emits('filtered-tabs', tabsForCurrentWindow.value.length)
 })
 
 // TODO use Windows Store
 chrome.windows.onCreated.addListener(async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()))
 chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await calcWindowRows()))
-// addListenerOnce(chrome.tabs.onUpdated, async (a: any, b: any, c: any) => (rows.value = await calcWindowRows()))
-// chrome.tabs.onCreated.addListener(async (a: any) => (rows.value = await calcWindowRows()))
-// chrome.tabs.onRemoved.addListener(async (a: any, b: any) => (rows.value = await calcWindowRows()))
 
 const filteredTabs = (tabs: chrome.tabs.Tab[]): chrome.tabs.Tab[] => {
   function checkMatch(val: string | undefined): boolean {
@@ -145,16 +138,13 @@ const filteredTabs = (tabs: chrome.tabs.Tab[]): chrome.tabs.Tab[] => {
 
 watchEffect(() => {
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
-})
-
-watchEffect(() => {
-  //console.log('*********', useTabsStore2().browserTabs)
-  tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
+  emits('filtered-tabs', tabsForCurrentWindow.value.length)
 })
 
 const updateTabs = () => {
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
   console.log('updating', tabsForCurrentWindow.value)
+  emits('filtered-tabs', tabsForCurrentWindow.value.length)
 }
 
 watchEffect(() => {
@@ -247,23 +237,6 @@ const hasDuplicate = (tab: chrome.tabs.Tab) => {
       return false
     }).length > 1
   )
-}
-
-const filterHint = () => {
-  if (filter.value.trim() === '') {
-    return currentWindowOnly.value
-      ? 'window has ' +
-          tabsForCurrentWindow.value.length +
-          ' tab' +
-          (tabsForCurrentWindow.value.length === 1 ? '' : 's')
-      : ''
-  }
-  return 'found ' + filteredTabsCount.value + ' tab' + (filteredTabsCount.value === 1 ? '' : 's')
-}
-
-const toggleSorting = () => {
-  sortByUrl.value = !sortByUrl.value
-  useCommandExecutor().executeFromUi(new TabsSortingCommand(sortByUrl.value))
 }
 
 const invertSelection = () => {

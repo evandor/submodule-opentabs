@@ -8,6 +8,7 @@
             <SidePanelOpenTabsListViewer
               ref="sidePanelOpenTabsListViewerRef"
               :filterTerm="filterTerm"
+              @filtered-tabs="(v) => (searchHits = v)"
               @tab-selection-changed="(v) => tabSelectionChanged(v)" />
           </div>
         </div>
@@ -19,6 +20,7 @@
       <OpenTabsFilterToolbarHelper
         @on-term-changed="(val) => termChanged(val)"
         @tab-selection-inverted="selectionInverted()"
+        :search-hits="searchHits"
         :tabSelection="tabSelection" />
     </q-page-sticky>
   </q-page>
@@ -34,6 +36,7 @@ import { onMounted, ref } from 'vue'
 const filterTerm = ref<string | undefined>(undefined)
 const tabSelection = ref<Set<string>>(new Set<string>())
 const sidePanelOpenTabsListViewerRef = ref()
+const searchHits = ref(0)
 
 onMounted(() => {
   Analytics.firePageViewEvent('SidePanelOpenTabsPage', document.location.href)
