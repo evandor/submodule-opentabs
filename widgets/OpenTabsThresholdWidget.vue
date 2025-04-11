@@ -23,6 +23,9 @@
     <q-tooltip class="tooltip-small" anchor="center right" self="center left"
       >Open Tabs: {{ useTabsStore2().browserTabs.length }} - click to manage</q-tooltip
     >
+    <span v-if="openTabsCountRatio2 > 70" style="font-size: 11px; position: relative; top: 7px">{{
+      useTabsStore2().browserTabs.length
+    }}</span>
   </span>
   <q-menu :offset="[0, 15]">
     <q-list dense style="min-width: 200px">
