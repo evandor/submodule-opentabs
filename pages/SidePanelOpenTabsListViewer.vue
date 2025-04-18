@@ -75,10 +75,10 @@
 </template>
 
 <script setup lang="ts">
-import SidePanelTabsetsSelectorWidget from 'components/widgets/SidePanelTabsetsSelectorWidget.vue'
 import _ from 'lodash'
 import { date } from 'quasar'
 import { SidePanelViews } from 'src/app/models/SidePanelViews'
+import SidePanelTabsetsSelectorWidget from 'src/core/components/widgets/SidePanelTabsetsSelectorWidget.vue'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
 import Analytics from 'src/core/utils/google-analytics'
 import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
@@ -118,7 +118,9 @@ onMounted(async () => {
 })
 
 // TODO use Windows Store
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 chrome.windows.onCreated.addListener(async (w: chrome.windows.Window) => (rows.value = await calcWindowRows()))
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
 chrome.windows.onRemoved.addListener(async (wId: Number) => (rows.value = await calcWindowRows()))
 
 const filteredTabs = (tabs: chrome.tabs.Tab[]): chrome.tabs.Tab[] => {

@@ -98,8 +98,10 @@ onMounted(() => {
   Analytics.firePageViewEvent('OpenTabsView', document.location.href)
 })
 
-watchEffect(async () => {
-  currentTabsetId.value = await useTabsetsStore().getCurrentTabsetId()
+watchEffect(() => {
+  useTabsetsStore()
+    .getCurrentTabsetId()
+    .then((tsId: string | undefined) => (currentTabsetId.value = tsId))
 })
 
 watchEffect(() => {
