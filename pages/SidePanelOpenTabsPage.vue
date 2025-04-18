@@ -27,10 +27,10 @@
 </template>
 
 <script lang="ts" setup>
+import OpenTabsFilterToolbarHelper from 'src/core/pages/sidepanel/helper/OpenTabsFilterToolbarHelper.vue'
+import ViewToolbarHelper from 'src/core/pages/sidepanel/helper/ViewToolbarHelper.vue'
 import Analytics from 'src/core/utils/google-analytics'
 import SidePanelOpenTabsListViewer from 'src/opentabs/pages/SidePanelOpenTabsListViewer.vue'
-import OpenTabsFilterToolbarHelper from 'src/pages/sidepanel/helper/OpenTabsFilterToolbarHelper.vue'
-import ViewToolbarHelper from 'src/pages/sidepanel/helper/ViewToolbarHelper.vue'
 import { onMounted, ref } from 'vue'
 
 const filterTerm = ref<string | undefined>(undefined)
