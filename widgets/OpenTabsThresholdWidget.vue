@@ -70,9 +70,9 @@ import _ from 'lodash'
 import { useQuasar } from 'quasar'
 import { FeatureIdent } from 'src/app/models/FeatureIdent'
 import { useUtils } from 'src/core/services/Utils'
+import { useSettingsStore } from 'src/core/stores/settingsStore'
 import { useFeaturesStore } from 'src/features/stores/featuresStore'
 import BackupAndCloseDialog from 'src/opentabs/dialogues/BackupAndCloseDialog.vue'
-import { useSettingsStore } from 'src/core/stores/settingsStore'
 import { Tabset, TabsetType } from 'src/tabsets/models/Tabset'
 import TabsetService from 'src/tabsets/services/TabsetService'
 import { useTabsetsStore } from 'src/tabsets/stores/tabsetsStore'
@@ -122,7 +122,7 @@ watch(
 watch(
   () => useTabsetsStore().getCurrentTabs.length,
   (after: number, before: number) => {
-    console.log('---', after, before)
+    //console.log('---', after, before)
     if (inBexMode()) {
       TabsetService.trackedTabsCount().then((res) => (trackedTabsCount.value = res))
       TabsetService.trackedIgnoredCount().then((res) => (ignoredTabsCount.value = res))
