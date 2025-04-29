@@ -3,8 +3,11 @@
   <div class="row q-mt-xs">
     <div class="col-6 q-mt-sm q-mb-md">
       <template v-if="useTabsetsStore().tabsets.size > 1">
-        <div class="text-caption q-ml-sm">Referenced Collection:</div>
-        <SidePanelTabsetsSelectorWidget :use-as-tabsets-switcher="true" @tabset-switched="updateTabs()" />
+        <div class="text-caption q-ml-sm">Reference Tabset:</div>
+        <SidePanelTabsetsSelectorWidget
+          :key="updated"
+          :use-as-tabsets-switcher="true"
+          @tabset-switched="updateTabs()" />
 
         <template v-if="useWindowsStore().allWindows.size > 1">
           <q-checkbox
@@ -107,6 +110,7 @@ const filter = ref('')
 const filterRef = ref(null)
 const filteredTabsCount = ref(0)
 const rows = ref<object[]>([])
+const updated = ref<number>(new Date().getTime())
 
 const router = useRouter()
 
@@ -144,6 +148,7 @@ watchEffect(() => {
 })
 
 const updateTabs = () => {
+  updated.value = new Date().getTime()
   tabsForCurrentWindow.value = filteredTabs(useTabsStore2().browserTabs)
   console.log('updating', tabsForCurrentWindow.value)
   emits('filtered-tabs', tabsForCurrentWindow.value.length)
