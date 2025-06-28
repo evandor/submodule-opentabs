@@ -3,13 +3,14 @@
   <div class="row q-mt-xs">
     <div class="col-6 q-mt-sm q-mb-md">
       <template v-if="useTabsetsStore().tabsets.size > 1">
-        <div class="text-caption q-ml-sm">Reference Tabset:</div>
-        <SidePanelTabsetsSelectorWidget
-          :key="updated"
-          :use-as-tabsets-switcher="true"
-          @tabset-switched="updateTabs()" />
-
-        <template v-if="useWindowsStore().allWindows.size > 1">
+        <template v-if="viewContext != 'popup'">
+          <div class="text-caption q-ml-sm">Reference Tabset:</div>
+          <SidePanelTabsetsSelectorWidget
+            :key="updated"
+            :use-as-tabsets-switcher="true"
+            @tabset-switched="updateTabs()" />
+        </template>
+        <template v-if="rows.length > 1">
           <q-checkbox
             v-model="currentWindowOnly"
             label="this window only"
@@ -82,6 +83,7 @@ import _ from 'lodash'
 import { date } from 'quasar'
 import { SidePanelViews } from 'src/app/models/SidePanelViews'
 import SidePanelTabsetsSelectorWidget from 'src/core/components/widgets/SidePanelTabsetsSelectorWidget.vue'
+import { ViewContext } from 'src/core/models/ViewContext'
 import { useCommandExecutor } from 'src/core/services/CommandExecutor'
 import Analytics from 'src/core/utils/google-analytics'
 import OpenTabCard2 from 'src/opentabs/components/OpenTabCard2.vue'
@@ -95,7 +97,11 @@ import { useWindowsStore } from 'src/windows/stores/windowsStore'
 import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
-const props = defineProps<{ filterTerm: string | undefined }>()
+type Props = { filterTerm: string | undefined; viewContext?: ViewContext }
+
+const props = withDefaults(defineProps<Props>(), {
+  viewContext: 'default',
+})
 
 const emits = defineEmits(['tabSelectionChanged', 'filtered-tabs'])
 
